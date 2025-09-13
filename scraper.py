@@ -1,15 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
 
-def scrape_sikafinance():
-    # Exemple simple de fallback
-    return [{"symbole": "SIKA", "nom": "Fallback Sikafinance", "cours_cloture": 1000, "variation": 0.0}]
-
-
 def scrape_brvm():
     url = "https://www.brvm.org/fr/cours-actions/0"
     try:
-        response = requests.get(url, timeout=10, verify=False)  # ← ici
+        response = requests.get(url, timeout=10, verify=False)
         soup = BeautifulSoup(response.text, "html.parser")
         rows = soup.select("table tbody tr")
         data = []
@@ -29,5 +24,14 @@ def scrape_brvm():
                 })
         return data
     except Exception as e:
-         print("Erreur BRVM, fallback Sikafinance")
-        return scrape_sikafinance()
+        print("Erreur BRVM, fallback Sikafinance")
+        return scrape_sikafinance()  # ← cette ligne doit être bien indentée
+
+def scrape_sikafinance():
+    return [{
+        "symbole": "SIKA",
+        "nom": "Fallback Sikafinance",
+        "cours_cloture": 1000,
+        "variation": 0.0,
+        "sources_concordantes": 0
+    }]

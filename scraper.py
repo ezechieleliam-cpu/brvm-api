@@ -14,7 +14,7 @@ def scrape_brvm():
                 symbole = cols[0].text.strip()
                 nom = cols[1].text.strip()
                 cours = float(cols[2].text.replace(" ", "").replace(",", "."))
-                variation = float(cols[4].text.replace(",", ".").replace("%", ""))
+                variation = float(cols[4].text.replace(" ", "").replace(",", ".").replace("%", ""))
                 data.append({
                     "symbole": symbole,
                     "nom": nom,

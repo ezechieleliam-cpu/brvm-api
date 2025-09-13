@@ -1,11 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
-import certifi
 
 def scrape_brvm():
     url = "https://www.brvm.org/fr/cours-actions/0"
     try:
-        response = requests.get(url, timeout=10, verify=False)
+        response = requests.get(url, timeout=10, verify=False)  # ← ici
         soup = BeautifulSoup(response.text, "html.parser")
         rows = soup.select("table tbody tr")
         data = []

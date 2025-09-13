@@ -26,3 +26,12 @@ def alerts():
         cache["last_update"] = now
     alertes = [a for a in cache["data"] if abs(a["variation"]) >= seuil]
     return alertes
+
+@app.get("/status")
+def status():
+    return {
+        "last_update": cache["last_update"],
+        "timestamp": time.time(),
+        "delay": round(time.time() - cache["last_update"], 2),
+        "source": "BRVM" if cache["data"][0]["sources_concordantes"] == 1 else "Sikafinance"
+    }

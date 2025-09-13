@@ -25,7 +25,7 @@ def scrape_brvm():
         return data
     except Exception as e:
         print("Erreur BRVM, fallback Sikafinance")
-        return scrape_sikafinance()  # ← cette ligne doit être bien indentée
+        return scrape_sikafinance()
 
 def scrape_sikafinance():
     return [{

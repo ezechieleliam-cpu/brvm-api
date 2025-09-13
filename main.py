@@ -16,3 +16,14 @@ def get_cours():
         cache["data"] = scrape_brvm()
         cache["last_update"] = now
     return cache["data"]
+
+    @app.get("/alerts")
+def alerts():
+    seuil = 5.0
+    now = time.time()
+    if now - cache["last_update"] > 30:
+        cache["data"] = scrape_brvm()
+        cache["last_update"] = now
+    alertes = [a for a in cache["data"] if abs(a["variation"]) >= seuil]
+    return alertes
+

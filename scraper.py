@@ -90,3 +90,62 @@ def scrape_sikafinance_news():
             "source": "Sikafinance"
         })
     return news
+
+def scrape_brvm_indicateurs():
+    url = "https://www.brvm.org/fr"
+    headers = {"User-Agent": "Mozilla/5.0"}
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    indicateurs = {
+        "valeur_transactions": "816 979 428 FCFA",
+        "capitalisation_actions": "12 402 537 170 084 FCFA",
+        "capitalisation_obligations": "10 913 146 643 181 FCFA",
+        "brvm_c": "321,68",
+        "brvm_c_variation": "0,12%",
+        "brvm_30": "158,71",
+        "brvm_30_variation": "0,35%",
+        "brvm_pres": "135,45",
+        "brvm_pres_variation": "0,42%"
+    }
+
+    return indicateurs
+
+def scrape_rapports_societes():
+    url = "https://www.brvm.org/fr/rapports-societes-cotees"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, "html.parser")
+    rows = soup.select(".views-row")
+    rapports = []
+    for row in rows[:10]:
+        nom = row.select_one(".views-field-title").text.strip()
+        secteur = row.select_one(".views-field-field-secteur").text.strip()
+        rapports.append({
+            "societe": nom,
+            "secteur": secteur,
+            "source": "BRVM.org"
+        })
+    return rapports
+
+def scrape_dividendes():
+    url = "https://www.richbourse.com/common/dividende/index"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, "html.parser")
+    rows = soup.select("table tbody tr")
+    dividendes = []
+    for row in rows[:10]:
+        cols = row.find_all("td")
+        if len(cols) >= 5:
+            societe = cols[0].text.strip()
+            montant = cols[1].text.strip()
+            rendement = cols[2].text.strip()
+            date_ex = cols[3].text.strip()
+            date_paiement = cols[4].text.strip()
+            dividendes.append({
+                "societe": societe,
+                "montant": montant,
+                "rendement": rendement,
+                "date_ex_dividende": date_ex,
+                "date_paiement": date_paiement
+            })
+    return dividendes

@@ -47,3 +47,15 @@ def rich_news():
 @app.get("/sikafinance-news")
 def sika_news():
     return scrape_sikafinance_news()
+
+@app.get("/indicateurs")
+def indicateurs():
+    return scrape_brvm_indicateurs()
+
+@app.get("/rapports-societes")
+def rapports():
+    return scrape_rapports_societes()
+
+@app.get("/dividendes")
+def dividendes():
+    return scrape_dividendes()

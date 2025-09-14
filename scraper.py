@@ -13,12 +13,17 @@ def scrape_brvm():
             if len(cols) >= 5:
                 symbole = cols[0].text.strip()
                 nom = cols[1].text.strip()
-                cours = float(cols[2].text.replace(" ", "").replace(",", "."))
-                variation = float(cols[4].text.replace(" ", "").replace(",", ".").replace("%", ""))
+                volume = int(cols[2].text.replace(" ", ""))
+                cours_veille = float(cols[3].text.replace(" ", "").replace(",", "."))
+                cours_ouverture = float(cols[4].text.replace(" ", "").replace(",", "."))
+                cours_cloture = float(cols[5].text.replace(" ", "").replace(",", "."))
+                variation = float(cols[6].text.replace(" ", "").replace(",", ".").replace("%", ""))
                 data.append({
                     "symbole": symbole,
                     "nom": nom,
-                    "cours_cloture": cours,
+                    "cours_veille": cours_veille,
+                    "cours_ouverture": cours_ouverture,
+                    "cours_cloture": cours_cloture,
                     "variation": variation,
                     "sources_concordantes": 1
                 })

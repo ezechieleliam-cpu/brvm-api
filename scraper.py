@@ -189,3 +189,25 @@ def scrape_dividendes():
             "date_paiement": "2025-10-01"
         }
     ]
+
+def scrape_stats():
+    data = scrape_brvm()  # ou ton cache local
+    total = len(data)
+    hausses = [d for d in data if d["variation"] > 0]
+    baisses = [d for d in data if d["variation"] < 0]
+    variation_moyenne = round(sum(d["variation"] for d in data) / total, 2)
+    return {
+        "total_actions": total,
+        "actions_en_hausse": len(hausses),
+        "actions_en_baisse": len(baisses),
+        "variation_moyenne": variation_moyenne
+    }
+
+def scrape_top_mouvements():
+    data = scrape_brvm()
+    hausses = sorted(data, key=lambda x: x["variation"], reverse=True)[:5]
+    baisses = sorted(data, key=lambda x: x["variation"])[:5]
+    return {
+        "hausses": hausses,
+        "baisses": baisses
+    }

@@ -1,0 +1,12 @@
+name: Refresh BRVM Data
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call refresh endpoint
+        run: curl https://brvm-api-1.onrender.com/refresh-data

@@ -40,3 +40,53 @@ def scrape_sikafinance():
         "variation": 0.0,
         "sources_concordantes": 0
     }]
+
+def scrape_brvm_news():
+    url = "https://www.brvm.org/fr/mediacentre/actualites"
+    headers = {"User-Agent": "Mozilla/5.0"}
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+    articles = soup.select(".views-row")
+    news = []
+    for article in articles[:5]:
+        titre = article.select_one(".title").text.strip()
+        resume = article.select_one(".field-content").text.strip()
+        news.append({
+            "titre": titre,
+            "resume": resume,
+            "source": "BRVM.org"
+        })
+    return news
+
+def scrape_richbourse_news():
+    url = "https://www.richbourse.com/common/news/index"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, "html.parser")
+    articles = soup.select(".news-item")
+    news = []
+    for article in articles[:5]:
+        titre = article.select_one("h3").text.strip()
+        resume = article.select_one("p").text.strip()
+        news.append({
+            "titre": titre,
+            "resume": resume,
+            "source": "RichBourse"
+        })
+    return news
+
+def scrape_sikafinance_news():
+    url = "https://www.sikafinance.com/marches/actualites_bourse_brvm"
+    headers = {"User-Agent": "Mozilla/5.0"}
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+    articles = soup.select(".actualite")
+    news = []
+    for article in articles[:5]:
+        titre = article.select_one("h2").text.strip()
+        resume = article.select_one("p").text.strip()
+        news.append({
+            "titre": titre,
+            "resume": resume,
+            "source": "Sikafinance"
+        })
+    return news

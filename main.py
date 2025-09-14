@@ -35,3 +35,15 @@ def status():
         "delay": round(time.time() - cache["last_update"], 2),
         "source": "BRVM" if cache["data"][0]["sources_concordantes"] == 1 else "Sikafinance"
     }
+
+@app.get("/brvm-news")
+def brvm_news():
+    return scrape_brvm_news()
+
+@app.get("/richbourse-news")
+def rich_news():
+    return scrape_richbourse_news()
+
+@app.get("/sikafinance-news")
+def sika_news():
+    return scrape_sikafinance_news()

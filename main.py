@@ -59,3 +59,13 @@ def rapports():
 @app.get("/dividendes")
 def dividendes():
     return scrape_dividendes()
+
+@app.get("/indicateurs")
+def indicateurs():
+    return scrape_brvm_indicateurs()
+
+@app.get("/rapports-societes")
+def rapports():
+    return scrape_rapports_societes()
+
+

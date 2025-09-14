@@ -149,3 +149,43 @@ def scrape_dividendes():
                 "date_paiement": date_paiement
             })
     return dividendes
+
+def scrape_brvm_indicateurs():
+    return {
+        "valeur_transactions": "816 979 428 FCFA",
+        "capitalisation_actions": "12 402 537 170 084 FCFA",
+        "capitalisation_obligations": "10 913 146 643 181 FCFA",
+        "brvm_c": "321,68",
+        "brvm_c_variation": "0,12%",
+        "brvm_30": "158,71",
+        "brvm_30_variation": "0,35%",
+        "brvm_pres": "135,45",
+        "brvm_pres_variation": "0,42%"
+    }
+
+def scrape_rapports_societes():
+    return [
+        {"societe": "PALM COTE D'IVOIRE", "secteur": "Agro-industrie"},
+        {"societe": "SOGB COTE D'IVOIRE", "secteur": "Agriculture"},
+        {"societe": "BOA BENIN", "secteur": "Banque"},
+        {"societe": "ONATEL BURKINA FASO", "secteur": "Télécom"},
+        {"societe": "TOTAL COTE D'IVOIRE", "secteur": "Distribution"}
+    ]
+
+def scrape_dividendes():
+    return [
+        {
+            "societe": "PALM COTE D'IVOIRE",
+            "montant": "220 FCFA",
+            "rendement": "9.2%",
+            "date_ex_dividende": "2025-09-20",
+            "date_paiement": "2025-10-05"
+        },
+        {
+            "societe": "SOGB COTE D'IVOIRE",
+            "montant": "180 FCFA",
+            "rendement": "7.8%",
+            "date_ex_dividende": "2025-09-18",
+            "date_paiement": "2025-10-01"
+        }
+    ]

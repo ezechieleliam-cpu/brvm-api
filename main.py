@@ -3,6 +3,15 @@ from scraper import scrape_brvm
 import time 
 
 from datetime import datetime, timedelta
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # ou ["https://ton-frontend.com"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 last_data = []
 last_update = datetime.min

@@ -4,6 +4,15 @@ import time
 
 from datetime import datetime, timedelta
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/refresh-data")
+def refresh_data():
+    # logique ici pour actualiser les données
+    return {"detail": "Mise à jour effectuée"}
+
 
 app.add_middleware(
     CORSMiddleware,

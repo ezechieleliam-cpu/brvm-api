@@ -8,7 +8,7 @@ CORS(app)
 @app.route("/api/brvm")
 def brvm():
     result = get_brvm_data_with_ssl()
-    return jsonify(result)
+    return jsonify(get_brvm_data_with_ssl())
 
 @app.route("/market/stocks")
 def market_stocks():

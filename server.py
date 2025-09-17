@@ -1,14 +1,16 @@
 from flask import Flask, jsonify
-from fetch_brvm_data import get_brvm_stocks, get_brvm_data_with_ssl
 from flask_cors import CORS
+from fetch_brvm_data import get_brvm_stocks, get_brvm_data_with_ssl
+import json
+import os
 
 app = Flask(__name__)
 CORS(app)
-    
+
 @app.route("/api/brvm")
 def brvm():
     result = get_brvm_data_with_ssl()
-    return jsonify(get_brvm_data_with_ssl())
+    return jsonify(result)  # ✅ Corrigé : ne pas appeler deux fois
 
 @app.route("/logs/ssl")
 def ssl_log():
@@ -22,7 +24,6 @@ def ssl_log():
 def market_stocks():
     return jsonify(get_brvm_stocks())
 
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
-
+    port = int(os.environ.get("PORT", 10000))  # ✅ Compatible Render
+    app.run(host="0.0.0.0", port=port)

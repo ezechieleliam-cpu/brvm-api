@@ -143,23 +143,28 @@ if __name__ == "__main__":
     # Test principal
     result = get_brvm_data_with_ssl()
 
-# ✅ Sauvegarde JSON
-with open("brvm_ssl_result.json", "w", encoding="utf-8") as f:
-    json.dump(result, f, indent=2, ensure_ascii=False)
+# ✅ Sauvegarde dans un fichier JSON
+try:
+    with open("brvm_ssl_result.json", "w", encoding="utf-8") as f:
+        json.dump(result, f, indent=2, ensure_ascii=False)
+    print("💾 Résultat SSL sauvegardé dans brvm_ssl_result.json")
+except Exception as e:
+    print(f"❌ Erreur lors de la sauvegarde JSON : {e}")
 
-# ✅ Log horodaté
-with open("brvm_log.txt", "a", encoding="utf-8") as log:
-    log.write(f"[{datetime.now().isoformat()}] SSL Test: {result}\n")
+# ✅ Log horodaté dans un fichier texte
+try:
+    with open("brvm_log.txt", "a", encoding="utf-8") as log:
+        log.write(f"[{datetime.now().isoformat()}] SSL Test: {json.dumps(result)}\n")
+    print("📝 Log horodaté ajouté dans brvm_log.txt")
+except Exception as e:
+    print(f"❌ Erreur lors de l’écriture du log : {e}")
 
 # ✅ Résumé visuel
-print(f"\n📊 Résumé : {result['status_code']} - SSL OK: {result['ssl_verified']}")
-    
-    if result["success"]:
-        print("\n🎉 Test SSL réussi!")
-        print(json.dumps(result, indent=2, ensure_ascii=False))
-    else:
-        print("\n⚠️ Échec du test SSL")
-        print(f"Erreur: {result.get('error', 'Erreur inconnue')}")
+if result.get("success"):
+    print(f"\n📊 Résumé : {result['status_code']} - SSL OK: {result['ssl_verified']}")
+else:
+    print(f"\n📊 Résumé : Échec - {result.get('error', 'Erreur inconnue')}")
+
     
     print("\n" + "=" * 50)
     

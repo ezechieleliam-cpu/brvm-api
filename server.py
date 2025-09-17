@@ -8,6 +8,11 @@ def brvm():
     result = get_brvm_data_with_ssl()
     return jsonify(result)
 
+@app.route("/market/stocks")
+def market_stocks():
+    return jsonify({"message": "Cette route est en cours de construction."})
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
 

@@ -142,6 +142,17 @@ if __name__ == "__main__":
     
     # Test principal
     result = get_brvm_data_with_ssl()
+
+# ✅ Sauvegarde JSON
+with open("brvm_ssl_result.json", "w", encoding="utf-8") as f:
+    json.dump(result, f, indent=2, ensure_ascii=False)
+
+# ✅ Log horodaté
+with open("brvm_log.txt", "a", encoding="utf-8") as log:
+    log.write(f"[{datetime.now().isoformat()}] SSL Test: {result}\n")
+
+# ✅ Résumé visuel
+print(f"\n📊 Résumé : {result['status_code']} - SSL OK: {result['ssl_verified']}")
     
     if result["success"]:
         print("\n🎉 Test SSL réussi!")

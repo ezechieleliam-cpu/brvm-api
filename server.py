@@ -20,6 +20,11 @@ def ssl_log():
     except Exception as e:
         return jsonify({"error": str(e)})
 
+@app.route("/")
+def home():
+    return jsonify({"message": "✅ BRVM API is running"})
+
+
 @app.route("/market/stocks")
 def market_stocks():
     return jsonify(get_brvm_stocks())

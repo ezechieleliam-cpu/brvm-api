@@ -62,8 +62,10 @@ def refresh_data():
 # 🔐 Test SSL avec certificat
 from flask import Flask, jsonify
 from fetch_brvm_data import get_brvm_data_with_ssl
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 31634db (Initial BRVM API)
 @app.route("/api/brvm")

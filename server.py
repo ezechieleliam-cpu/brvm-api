@@ -12,8 +12,11 @@ def brvm():
 
 @app.route("/logs/ssl")
 def ssl_log():
-    with open("brvm_ssl_result.json", "r", encoding="utf-8") as f:
-        return jsonify(json.load(f))
+    try:
+        with open("brvm_ssl_result.json", "r", encoding="utf-8") as f:
+            return jsonify(json.load(f))
+    except Exception as e:
+        return jsonify({"error": str(e)})
 
 @app.route("/market/stocks")
 def market_stocks():

@@ -9,6 +9,40 @@ import json
 import ssl
 import urllib3
 from datetime import datetime
+from bs4 import BeautifulSoup
+
+def get_brvm_stocks():
+    url = "https://www.brvm.org/fr/cours-actions/0"
+    headers = {
+        'User-Agent': 'Mozilla/5.0',
+        'Accept-Language': 'fr-FR,fr;q=0.9',
+    }
+
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        rows = soup.select("table tbody tr")
+        stocks = []
+
+        for row in rows:
+            cols = row.find_all("td")
+            if len(cols) >= 7:
+                stocks.append({
+                    "symbol": cols[0].text.strip(),
+                    "name": cols[1].text.strip(),
+                    "volume": cols[2].text.strip(),
+                    "prev_close": cols[3].text.strip(),
+                    "open": cols[4].text.strip(),
+                    "close": cols[5].text.strip(),
+                    "variation": cols[6].text.strip()
+                })
+
+        return stocks
+
+    except Exception as e:
+        return [{"error": str(e)}]
+
 
 # Configuration SSL
 def get_brvm_data_with_ssl():

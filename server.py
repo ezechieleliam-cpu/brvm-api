@@ -10,6 +10,11 @@ def brvm():
     result = get_brvm_data_with_ssl()
     return jsonify(get_brvm_data_with_ssl())
 
+@app.route("/logs/ssl")
+def ssl_log():
+    with open("brvm_ssl_result.json", "r", encoding="utf-8") as f:
+        return jsonify(json.load(f))
+
 @app.route("/market/stocks")
 def market_stocks():
     return jsonify(get_brvm_stocks())

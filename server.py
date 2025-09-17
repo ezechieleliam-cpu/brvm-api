@@ -10,7 +10,7 @@ def brvm():
 
 @app.route("/market/stocks")
 def market_stocks():
-    return jsonify({"message": "Cette route est en cours de construction."})
+    return jsonify(get_brvm_stocks())
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
-
+    
 @app.route("/api/brvm")
 def brvm():
     result = get_brvm_data_with_ssl()

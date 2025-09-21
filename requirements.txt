@@ -1,6 +1,7 @@
 fastapi
 uvicorn
-beautifulsoup4
-certifi
+certifi 
 flask
+flask-cors
 requests
+beautifulsoup4

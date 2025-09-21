@@ -7,6 +7,18 @@ import os
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
+@app.route("/refresh-data")
+def refresh_data():
+    from datetime import datetime
+    print(f"🔄 Requête reçue à /refresh-data à {datetime.now().isoformat()}")
+    result = get_brvm_stocks()
+    return jsonify({
+        "message": "✅ Données BRVM actualisées",
+        "timestamp": datetime.now().isoformat(),
+        "data": result
+    })
+
+
 @app.route("/api/brvm")
 def brvm():
     result = get_brvm_data_with_ssl()

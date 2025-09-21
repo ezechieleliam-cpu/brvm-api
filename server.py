@@ -32,6 +32,10 @@ def ssl_log():
     except Exception as e:
         return jsonify({"error": str(e)})
 
+@app.route("/healthz")
+def health():
+    return jsonify({"status": "ok", "timestamp": datetime.now().isoformat()})
+
 @app.route("/")
 def home():
     return jsonify({"message": "✅ BRVM API is running"})

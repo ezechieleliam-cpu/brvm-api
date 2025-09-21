@@ -136,7 +136,8 @@ def test_alternative_endpoints():
 
 if __name__ == "__main__":
         print("📦 Test de récupération des actions BRVM")
-    data = get_brvm_stocks()
+   
+data = get_brvm_stocks()
     print(json.dumps(data[:5], indent=2, ensure_ascii=False))  # Affiche les 5 premières
     print("🚀 BRVM SSL Data Fetcher")
     print("=" * 50)

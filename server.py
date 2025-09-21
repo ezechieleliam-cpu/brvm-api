@@ -38,9 +38,11 @@ def home():
 
 
 @app.route("/market/stocks")
-def market_stocks():                    
-print(f"📥 Requête reçue à /market/stocks à {datetime.now().isoformat()}")
-return jsonify(get_brvm_stocks())
+def market_stocks():
+    from datetime import datetime
+    print(f"📥 Requête reçue à /market/stocks à {datetime.now().isoformat()}")
+    return jsonify(get_brvm_stocks())
+
 
 
 if __name__ == "__main__":

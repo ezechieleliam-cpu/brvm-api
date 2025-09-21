@@ -8,6 +8,7 @@ import requests
 import json
 import ssl
 import urllib3
+import os
 from datetime import datetime
 from bs4 import BeautifulSoup
 
@@ -55,7 +56,7 @@ def get_brvm_data_with_ssl():
         session = requests.Session()
         
         # Chemin vers le certificat SSL (à ajuster selon votre structure)
-        cert_path = "certs/digicert_global_root_g2.pem"
+        cert_path = os.environ.get("CERT_PATH", "certs/digicert_global_root_g2.pem")
         
         # Configuration SSL
         session.verify = cert_path

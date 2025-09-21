@@ -44,24 +44,16 @@ def get_brvm_stocks():
     except Exception as e:
         return [{"error": str(e)}]
 
-
-# Configuration SSL
 def get_brvm_data_with_ssl():
     """
     Récupère les données BRVM avec vérification SSL
     Utilise le certificat DigiCert Global Root G2
     """
     try:
-        # Configuration de la session avec certificat SSL
         session = requests.Session()
-        
-        # Chemin vers le certificat SSL (à ajuster selon votre structure)
         cert_path = os.environ.get("CERT_PATH", "certs/digicert_global_root_g2.pem")
-        
-        # Configuration SSL
         session.verify = cert_path
-        
-        # Headers pour simuler un navigateur réel
+
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
             'Accept': 'application/json, text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -70,28 +62,25 @@ def get_brvm_data_with_ssl():
             'Connection': 'keep-alive',
             'Upgrade-Insecure-Requests': '1',
         }
-        
+
         print("🔐 Connexion sécurisée SSL initialisée")
         print(f"📜 Certificat utilisé: {cert_path}")
         print("🔗 Tentative de connexion à BRVM...")
-        
-        # Test de connexion principale
+
         response = session.get("https://www.brvm.org", headers=headers, timeout=10)
-        
+
         print(f"✅ Connexion réussie! Status: {response.status_code}")
         print(f"📊 Taille de la réponse: {len(response.content)} bytes")
-        
-        # Affichage d'un extrait de la réponse
+
         content_preview = response.text[:500] if response.text else "Contenu vide"
         print(f"📄 Aperçu du contenu:")
         print("-" * 50)
         print(content_preview)
         print("-" * 50)
-        
-        # Informations SSL
+
         print(f"🔒 Connexion SSL vérifiée avec succès")
         print(f"📅 Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-        
+
         return {
             "success": True,
             "status_code": response.status_code,
@@ -99,19 +88,19 @@ def get_brvm_data_with_ssl():
             "ssl_verified": True,
             "timestamp": datetime.now().isoformat()
         }
-        
+
     except requests.exceptions.SSLError as e:
         print(f"❌ Erreur SSL: {e}")
         return {"success": False, "error": f"SSL Error: {e}"}
-        
+
     except requests.exceptions.Timeout as e:
         print(f"⏰ Timeout: {e}")
         return {"success": False, "error": f"Timeout: {e}"}
-        
+
     except requests.exceptions.RequestException as e:
         print(f"🚫 Erreur de requête: {e}")
         return {"success": False, "error": f"Request Error: {e}"}
-        
+
     except Exception as e:
         print(f"💥 Erreur inattendue: {e}")
         return {"success": False, "error": f"Unexpected Error: {e}"}
@@ -125,7 +114,7 @@ def test_alternative_endpoints():
         "https://www.brvm.org/fr/marche/actions",
         "https://brvm-api-1.onrender.com/market/stocks"
     ]
-    
+
     for endpoint in endpoints:
         print(f"\n🧪 Test de: {endpoint}")
         try:
@@ -135,42 +124,34 @@ def test_alternative_endpoints():
             print(f"❌ {endpoint} - Erreur: {e}")
 
 if __name__ == "__main__":
-        print("📦 Test de récupération des actions BRVM")
-   
-data = get_brvm_stocks()
+    print("📦 Test de récupération des actions BRVM")
+    data = get_brvm_stocks()
     print(json.dumps(data[:5], indent=2, ensure_ascii=False))  # Affiche les 5 premières
+
     print("🚀 BRVM SSL Data Fetcher")
     print("=" * 50)
-    
-    # Test principal
+
     result = get_brvm_data_with_ssl()
 
-# ✅ Sauvegarde dans un fichier JSON
-try:
-    with open("brvm_ssl_result.json", "w", encoding="utf-8") as f:
-        json.dump(result, f, indent=2, ensure_ascii=False)
-    print("💾 Résultat SSL sauvegardé dans brvm_ssl_result.json")
-except Exception as e:
-    print(f"❌ Erreur lors de la sauvegarde JSON : {e}")
+    try:
+        with open("brvm_ssl_result.json", "w", encoding="utf-8") as f:
+            json.dump(result, f, indent=2, ensure_ascii=False)
+        print("💾 Résultat SSL sauvegardé dans brvm_ssl_result.json")
+    except Exception as e:
+        print(f"❌ Erreur lors de la sauvegarde JSON : {e}")
 
-# ✅ Log horodaté dans un fichier texte
-try:
-    with open("brvm_log.txt", "a", encoding="utf-8") as log:
-        log.write(f"[{datetime.now().isoformat()}] SSL Test: {json.dumps(result)}\n")
-    print("📝 Log horodaté ajouté dans brvm_log.txt")
-except Exception as e:
-    print(f"❌ Erreur lors de l’écriture du log : {e}")
+    try:
+        with open("brvm_log.txt", "a", encoding="utf-8") as log:
+            log.write(f"[{datetime.now().isoformat()}] SSL Test: {json.dumps(result)}\n")
+        print("📝 Log horodaté ajouté dans brvm_log.txt")
+    except Exception as e:
+        print(f"❌ Erreur lors de l’écriture du log : {e}")
 
-# ✅ Résumé visuel
-if result.get("success"):
-    print(f"\n📊 Résumé : {result['status_code']} - SSL OK: {result['ssl_verified']}")
-else:
-    print(f"\n📊 Résumé : Échec - {result.get('error', 'Erreur inconnue')}")
+    if result.get("success"):
+        print(f"\n📊 Résumé : {result['status_code']} - SSL OK: {result['ssl_verified']}")
+    else:
+        print(f"\n📊 Résumé : Échec - {result.get('error', 'Erreur inconnue')}")
 
-    
     print("\n" + "=" * 50)
-    
-    # Tests d'endpoints alternatifs
     test_alternative_endpoints()
-    
     print("\n✨ Script terminé")

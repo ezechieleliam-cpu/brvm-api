@@ -1,95 +1,47 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <title>📈 Cours des Actions BRVM</title>
-  <link rel="icon" href="/static/favicon.ico" />
-  <style>
-    body { font-family: Arial, sans-serif; padding: 2rem; background: #f9f9f9; }
-    h1 { color: #2c3e50; }
-    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
-    th { background-color: #eee; }
-    input, button { margin-top: 1rem; padding: 0.5rem; }
-    #controls { display: flex; gap: 1rem; align-items: center; }
-  </style>
-</head>
-<body>
-  <h1>📊 Cours des Actions BRVM</h1>
-  <div id="controls">
-    <input type="text" id="search" placeholder="🔍 Rechercher une entreprise..." oninput="filterTable()" />
-    <button onclick="refreshData()">🔄 Actualiser</button>
-    <button onclick="exportCSV()">📤 Export CSV</button>
-  </div>
-  <table id="stocks-table">
-    <thead>
-      <tr>
-        <th>Symbole</th>
-        <th>Nom</th>
-        <th>Volume</th>
-        <th>Clôture</th>
-        <th>Variation</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <script>
-    let fullData = [];
-
-    async function refreshData() {
-      const res = await fetch("/refresh-data");
-      const json = await res.json();
-      fullData = json.data;
-      renderTable(fullData);
-    }
-
-    function renderTable(data) {
-      const tbody = document.querySelector("#stocks-table tbody");
-      tbody.innerHTML = "";
-      data.forEach(stock => {
-        const row = `<tr>
-          <td>${stock.symbol}</td>
-          <td>${stock.name}</td>
-          <td>${stock.volume}</td>
-          <td>${stock.close}</td>
-          <td>${stock.variation}</td>
-        </tr>`;
-        tbody.innerHTML += row;
-      });
-    }
-
-    function filterTable() {
-      const query = document.getElementById("search").value.toLowerCase();
-      const filtered = fullData.filter(stock =>
-        stock.name.toLowerCase().includes(query) || stock.symbol.toLowerCase().includes(query)
-      );
-      renderTable(filtered);
-    }
-
-    function exportCSV() {
-      const rows = [["Symbole", "Nom", "Volume", "Clôture", "Variation"]];
-      fullData.forEach(stock => {
-        rows.push([stock.symbol, stock.name, stock.volume, stock.close, stock.variation]);
-      });
-      const csvContent = rows.map(e => e.join(",")).join("\n");
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "brvm_actions.csv";
-      link.click();
-    }
-
-    refreshData(); // auto-load on page open
-  </script>
-</body>
-</html>
-<canvas id="variationChart" width="600" height="300"></canvas>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+  let fullData = [];
+
+  async function refreshData() {
+    try {
+      const res = await fetch("/refresh-data");
+      const json = await res.json();
+      console.log("📦 Données reçues:", json);
+
+      if (!json.data || !Array.isArray(json.data)) {
+        console.error("❌ Format inattendu:", json);
+        return;
+      }
+
+      fullData = json.data;
+      renderTable(fullData);
+      renderChart(fullData);
+    } catch (error) {
+      console.error("💥 Erreur lors du chargement des données:", error);
+    }
+  }
+
+  function renderTable(data) {
+    const tbody = document.querySelector("#stocks-table tbody");
+    tbody.innerHTML = "";
+    data.forEach(stock => {
+      const row = `<tr>
+        <td>${stock?.symbol || "-"}</td>
+        <td>${stock?.name || "-"}</td>
+        <td>${stock?.volume || "-"}</td>
+        <td>${stock?.close || "-"}</td>
+        <td>${stock?.variation || "-"}</td>
+      </tr>`;
+      tbody.innerHTML += row;
+    });
+  }
+
   function renderChart(data) {
-    const labels = data.map(s => s.symbol);
-    const variations = data.map(s => parseFloat(s.variation.replace(",", ".")));
+    const labels = data.map(s => s.symbol || "-");
+    const variations = data.map(s => {
+      const raw = s.variation?.replace(",", ".") || "0";
+      return parseFloat(raw) || 0;
+    });
 
     const ctx = document.getElementById("variationChart").getContext("2d");
     new Chart(ctx, {
@@ -115,11 +67,34 @@
     });
   }
 
-  async function refreshData() {
-    const res = await fetch("/refresh-data");
-    const json = await res.json();
-    fullData = json.data;
-    renderTable(fullData);
-    renderChart(fullData);
+  function filterTable() {
+    const query = document.getElementById("search").value.toLowerCase();
+    const filtered = fullData.filter(stock =>
+      (stock.name || "").toLowerCase().includes(query) ||
+      (stock.symbol || "").toLowerCase().includes(query)
+    );
+    renderTable(filtered);
   }
+
+  function exportCSV() {
+    const rows = [["Symbole", "Nom", "Volume", "Clôture", "Variation"]];
+    fullData.forEach(stock => {
+      rows.push([
+        stock?.symbol || "-",
+        stock?.name || "-",
+        stock?.volume || "-",
+        stock?.close || "-",
+        stock?.variation || "-"
+      ]);
+    });
+    const csvContent = rows.map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "brvm_actions.csv";
+    link.click();
+  }
+
+  refreshData(); // auto-load on page open
+  setInterval(refreshData, 60000); // actualise toutes les 60 secondes
 </script>

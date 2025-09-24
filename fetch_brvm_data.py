@@ -26,17 +26,21 @@ def get_brvm_stocks():
         stocks = []
 
         for row in rows:
-            cols = row.find_all("td")
-            if len(cols) >= 7:
-                stocks.append({
-                    "symbol": cols[0].text.strip(),
-                    "name": cols[1].text.strip(),
-                    "volume": cols[2].text.strip(),
-                    "prev_close": cols[3].text.strip(),
-                    "open": cols[4].text.strip(),
-                    "close": cols[5].text.strip(),
-                    "variation": cols[6].text.strip()
-                })
+    cols = row.find_all("td")
+    if len(cols) >= 7:
+        variation_span = cols[6].find("span")
+        variation = variation_span.text.strip() if variation_span else cols[6].text.strip()
+
+        stocks.append({
+            "symbol": cols[0].text.strip(),
+            "name": cols[1].text.strip(),
+            "volume": cols[2].text.strip(),
+            "prev_close": cols[3].text.strip(),
+            "open": cols[4].text.strip(),
+            "close": cols[5].text.strip(),
+            "variation": variation
+        })
+
 
         return stocks
 

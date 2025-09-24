@@ -9,8 +9,9 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 # 🌐 Page HTML principale
-@app.route("/cours-actions")
-def cours_actions_page():
+@app.route("/api/cours-actions/<symbol>")
+def get_stock_by_symbol(symbol):
+    log_request(f"/api/cours-actions/{symbol}")
     return render_template("cours_actions.html")
 
 # 🔎 API filtrée par symbole
@@ -69,6 +70,7 @@ def home():
 # 📊 Route alternative pour les actions
 @app.route("/market/stocks")
 def market_stocks():
+    log_request("/market/stocks")
     print(f"📥 Requête reçue à /market/stocks à {datetime.now().isoformat()}")
     return jsonify(get_brvm_stocks())
 

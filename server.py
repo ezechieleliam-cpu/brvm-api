@@ -5,6 +5,13 @@ from datetime import datetime
 import json
 import os
 
+def log_request(route):
+    try:
+        with open("brvm_log.txt", "a", encoding="utf-8") as log:
+            log.write(f"[{datetime.now().isoformat()}] Route appelée: {route}\n")
+    except Exception as e:
+        print(f"❌ Erreur lors du log: {e}")
+
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 

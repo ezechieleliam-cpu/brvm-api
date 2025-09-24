@@ -12,34 +12,44 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 def cours_actions_page():
     return render_template("cours_actions.html")
 
-@app.route("/api/cours-actions")
-def cours_actions_data():
-    from fetch_brvm_data import get_brvm_stocks
+@app.route("/api/cours-actions/<symbol>")
+def get_stock_by_symbol(symbol):
     from datetime import datetime
-    print(f"📥 Requête reçue à /api/cours-actions à {datetime.now().isoformat()}")
-    return jsonify(get_brvm_stocks())
+    print(f"🔎 Requête reçue pour {symbol} à {datetime.now().isoformat()}")
+    all_stocks = get_brvm_stocks()
+    filtered = [s for s in all_stocks if s["symbol"].lower() == symbol.lower()]
+    if filtered:
+        return jsonify(filtered[0])
+    else:
+        return jsonify({"error": f"Aucune entreprise trouvée pour le symbole '{symbol}'"}), 404
+
 
 
 @app.route("/favicon.ico")
 def favicon():
     return "", 204  # No Content
 
+
 @app.route("/refresh-data")
 def refresh_data():
     from datetime import datetime
+
     print(f"🔄 Requête reçue à /refresh-data à {datetime.now().isoformat()}")
     result = get_brvm_stocks()
-    return jsonify({
-        "message": "✅ Données BRVM actualisées",
-        "timestamp": datetime.now().isoformat(),
-        "data": result
-    })
+    return jsonify(
+        {
+            "message": "✅ Données BRVM actualisées",
+            "timestamp": datetime.now().isoformat(),
+            "data": result,
+        }
+    )
 
 
 @app.route("/api/brvm")
 def brvm():
     result = get_brvm_data_with_ssl()
     return jsonify(result)  # ✅ Corrigé : ne pas appeler deux fois
+
 
 @app.route("/logs/ssl")
 def ssl_log():
@@ -49,9 +59,6 @@ def ssl_log():
     except Exception as e:
         return jsonify({"error": str(e)})
 
-@app.route("/healthz")
-def health():
-    return jsonify({"status": "ok", "timestamp": datetime.now().isoformat()})
 
 @app.route("/")
 def home():
@@ -61,11 +68,9 @@ def home():
 @app.route("/market/stocks")
 def market_stocks():
     from datetime import datetime
+
     print(f"📥 Requête reçue à /market/stocks à {datetime.now().isoformat()}")
     return jsonify(get_brvm_stocks())
-
-
-
 
 
 if __name__ == "__main__":

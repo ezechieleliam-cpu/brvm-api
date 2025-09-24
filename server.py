@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 from fetch_brvm_data import get_brvm_stocks, get_brvm_data_with_ssl
+from flask import Flask, jsonify, render_template
 import json
 import os
 
@@ -8,10 +9,16 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route("/cours-actions")
-def cours_actions():
+def cours_actions_page():
+    return render_template("cours_actions.html")
+
+@app.route("/api/cours-actions")
+def cours_actions_data():
     from fetch_brvm_data import get_brvm_stocks
-    print(f"📥 Requête reçue à /cours-actions à {datetime.now().isoformat()}")
+    from datetime import datetime
+    print(f"📥 Requête reçue à /api/cours-actions à {datetime.now().isoformat()}")
     return jsonify(get_brvm_stocks())
+
 
 @app.route("/favicon.ico")
 def favicon():

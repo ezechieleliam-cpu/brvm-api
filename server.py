@@ -35,7 +35,7 @@ def get_stock_by_symbol(symbol):
 # 🔄 Actualisation des données BRVM
 @app.route("/refresh-data")
 def refresh_data():
-    log_request("/refresh-data")
+     log_request("/refresh-data")
     try:
         result = get_brvm_stocks()
         if isinstance(result, list) and result and "error" not in result[0]:

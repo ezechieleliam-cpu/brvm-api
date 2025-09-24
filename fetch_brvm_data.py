@@ -6,8 +6,6 @@ Utilise le certificat DigiCert Global Root G2 pour sécuriser les connexions HTT
 
 import requests
 import json
-import ssl
-import urllib3
 import os
 from datetime import datetime
 from bs4 import BeautifulSoup
@@ -43,6 +41,7 @@ def get_brvm_stocks():
 
     except Exception as e:
         return [{"error": str(e)}]
+
 
 def get_brvm_data_with_ssl():
     """
@@ -105,10 +104,8 @@ def get_brvm_data_with_ssl():
         print(f"💥 Erreur inattendue: {e}")
         return {"success": False, "error": f"Unexpected Error: {e}"}
 
+
 def test_alternative_endpoints():
-    """
-    Teste des endpoints alternatifs pour les données BRVM
-    """
     endpoints = [
         "https://www.brvm.org/fr/cotations",
         "https://www.brvm.org/fr/marche/actions",
@@ -123,11 +120,11 @@ def test_alternative_endpoints():
         except Exception as e:
             print(f"❌ {endpoint} - Erreur: {e}")
 
+
 if __name__ == "__main__":
     print("📦 Test de récupération des actions BRVM")
     data = get_brvm_stocks()
-    print(json.dumps(data[:5], indent=2, ensure_ascii=False))  # Affiche les 5 premières
-
+    print(json.dumps(data[:5], indent=2, ensure_ascii=False))
     print("🚀 BRVM SSL Data Fetcher")
     print("=" * 50)
 

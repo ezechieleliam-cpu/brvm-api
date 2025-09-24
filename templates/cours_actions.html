@@ -86,6 +86,11 @@
         if (!res.ok) throw new Error("Serveur indisponible");
 
         const json = await res.json();
+        if (json.error) {
+  document.getElementById("status").textContent = `🔴 ${json.error}`;
+  return;
+}
+
         console.log("📦 Données reçues:", json);
 
         if (!json.data || !Array.isArray(json.data)) {

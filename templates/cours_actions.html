@@ -194,6 +194,7 @@
       link.href = URL.createObjectURL(blob);
       link.download = "brvm_actions.csv";
       link.click();
+      document.getElementById("status").textContent = "📁 Fichier CSV généré";
     }
 
     refreshData();

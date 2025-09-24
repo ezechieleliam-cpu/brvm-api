@@ -103,6 +103,20 @@
       }
     }
 
+    async function testSSL() {
+  try {
+    const res = await fetch("/api/brvm");
+    const json = await res.json();
+    console.log("🔐 Résultat SSL:", json);
+    document.getElementById("status").textContent = json.success
+      ? `✅ SSL OK - ${json.status_code}`
+      : `🔴 SSL KO - ${json.error}`;
+  } catch (e) {
+    document.getElementById("status").textContent = "🔴 Erreur SSL inconnue";
+  }
+}
+
+    
     function renderTable(data) {
       const tbody = document.querySelector("#stocks-table tbody");
       tbody.innerHTML = "";

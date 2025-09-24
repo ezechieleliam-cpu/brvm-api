@@ -6,7 +6,7 @@
     try {
       const res = await fetch("/refresh-data");
       const json = await res.json();
-      console.log("📦 Données reçues:", json);
+      console.log("📦 Données reçues:", json); // ✅ Ici
 
       if (!json.data || !Array.isArray(json.data)) {
         console.error("❌ Format inattendu:", json);

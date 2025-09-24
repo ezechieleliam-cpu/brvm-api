@@ -37,9 +37,9 @@ def get_stock_by_symbol(symbol):
 @app.route("/refresh-data")
 def refresh_data():
     log_request("/refresh-data")
-    print("📦 Résultat brut du scraping :", result)
     try:
         result = get_brvm_stocks()
+        print("📦 Résultat brut du scraping :", result)  # ✅ Ce log doit être dans le try
         if isinstance(result, list) and result and "error" not in result[0]:
             return jsonify({
                 "message": "✅ Données BRVM actualisées",
@@ -54,7 +54,9 @@ def refresh_data():
                 "error": result[0].get("error", "Erreur inconnue")
             }), 500
     except Exception as e:
+        print(f"❌ Exception dans /refresh-data : {e}")
         return jsonify({"error": str(e)}), 500
+
 
 # 🔐 Test SSL avec certificat
 @app.route("/api/brvm")

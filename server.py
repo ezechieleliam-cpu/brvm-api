@@ -69,7 +69,6 @@ def ssl_log():
     except Exception as e:
         return jsonify({"error": str(e)})
 
-
 # 🏠 Page d’accueil
 @app.route("/")
 def home():

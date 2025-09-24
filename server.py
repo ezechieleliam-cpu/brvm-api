@@ -37,6 +37,7 @@ def get_stock_by_symbol(symbol):
 @app.route("/refresh-data")
 def refresh_data():
     log_request("/refresh-data")
+    print("📦 Résultat brut du scraping :", result)
     try:
         result = get_brvm_stocks()
         if isinstance(result, list) and result and "error" not in result[0]:

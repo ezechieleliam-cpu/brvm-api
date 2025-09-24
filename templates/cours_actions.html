@@ -2,6 +2,9 @@
 <script>
   let fullData = [];
 
+<div id="status" style="margin-bottom: 1rem; font-weight: bold;"></div>
+
+
   async function refreshData() {
   try {
     const res = await fetch("/refresh-data");

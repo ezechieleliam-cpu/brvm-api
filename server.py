@@ -9,14 +9,14 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 # 🌐 Page HTML principale
-@app.route("/api/cours-actions/<symbol>")
-def get_stock_by_symbol(symbol):
-    log_request(f"/api/cours-actions/{symbol}")
+@app.route("/cours-actions")
+def cours_actions_page():
     return render_template("cours_actions.html")
 
 # 🔎 API filtrée par symbole
 @app.route("/api/cours-actions/<symbol>")
 def get_stock_by_symbol(symbol):
+    log_request(f"/api/cours-actions/{symbol}")
     print(f"🔎 Requête reçue pour {symbol} à {datetime.now().isoformat()}")
     all_stocks = get_brvm_stocks()
     filtered = [s for s in all_stocks if s["symbol"].lower() == symbol.lower()]

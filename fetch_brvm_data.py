@@ -11,6 +11,7 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 
 def get_brvm_stocks():
+    print("📦 Stocks extraits:", stocks[:5])
     url = "https://www.brvm.org/fr/cours-actions/0"
     headers = {
         'User-Agent': 'Mozilla/5.0',

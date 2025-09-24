@@ -5,6 +5,7 @@ from datetime import datetime
 import json
 import os
 
+# ✅ Fonction de log
 def log_request(route):
     try:
         with open("brvm_log.txt", "a", encoding="utf-8") as log:
@@ -35,7 +36,7 @@ def get_stock_by_symbol(symbol):
 # 🔄 Actualisation des données BRVM
 @app.route("/refresh-data")
 def refresh_data():
-     log_request("/refresh-data")
+    log_request("/refresh-data")
     try:
         result = get_brvm_stocks()
         if isinstance(result, list) and result and "error" not in result[0]:
@@ -46,13 +47,13 @@ def refresh_data():
             })
         else:
             return jsonify({
-        "message": "✅ Données BRVM actualisées",
-        "timestamp": datetime.now().isoformat(),
-        "data": result
-    })
+                "message": "⚠️ Erreur lors du scraping",
+                "timestamp": datetime.now().isoformat(),
+                "data": [],
+                "error": result[0].get("error", "Erreur inconnue")
+            }), 500
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 # 🔐 Test SSL avec certificat
 @app.route("/api/brvm")

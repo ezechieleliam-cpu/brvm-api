@@ -13,6 +13,9 @@ def cours_actions():
     print(f"📥 Requête reçue à /cours-actions à {datetime.now().isoformat()}")
     return jsonify(get_brvm_stocks())
 
+@app.route("/favicon.ico")
+def favicon():
+    return "", 204  # No Content
 
 @app.route("/refresh-data")
 def refresh_data():

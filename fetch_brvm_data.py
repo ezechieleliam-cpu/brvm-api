@@ -17,7 +17,7 @@ def get_brvm_stocks():
         'Accept-Language': 'fr-FR,fr;q=0.9',
     }
 
-    cert_path = os.environ.get("CERT_PATH", "certs/digicert_global_root_g2.pem")  # ✅ Ajout ici
+    cert_path = os.environ.get("CERT_PATH", "certs/digicert_global_root_g2.pem")
     try:
         response = requests.get(url, headers=headers, timeout=10, verify=cert_path)  
         soup = BeautifulSoup(response.text, "html.parser")

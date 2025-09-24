@@ -27,13 +27,24 @@ def get_stock_by_symbol(symbol):
 # 🔄 Actualisation des données BRVM
 @app.route("/refresh-data")
 def refresh_data():
-    print(f"🔄 Requête reçue à /refresh-data à {datetime.now().isoformat()}")
-    result = get_brvm_stocks()
-    return jsonify({
-        "message": "✅ Données BRVM actualisées",
-        "timestamp": datetime.now().isoformat(),
-        "data": result
-    })
+    try:
+        result = get_brvm_stocks()
+        if isinstance(result, list) and result and "error" not in result[0]:
+            return jsonify({
+                "message": "✅ Données BRVM actualisées",
+                "timestamp": datetime.now().isoformat(),
+                "data": result
+            })
+        else:
+            return jsonify({
+                "message": "⚠️ Erreur lors du scraping",
+                "timestamp": datetime.now().isoformat(),
+                "data": [],
+                "error": result[0].get("error", "Erreur inconnue")
+            }), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 # 🔐 Test SSL avec certificat
 @app.route("/api/brvm")

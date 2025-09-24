@@ -3,23 +3,21 @@
   let fullData = [];
 
   async function refreshData() {
-    try {
-      const res = await fetch("/refresh-data");
-      const json = await res.json();
-      console.log("📦 Données reçues:", json); // ✅ Affiche dans la console
+  try {
+    const res = await fetch("/refresh-data");
+    if (!res.ok) throw new Error("Serveur indisponible");
 
-      if (!json.data || !Array.isArray(json.data)) {
-        console.error("❌ Format inattendu:", json);
-        return;
-      }
-
-      fullData = json.data;
-      renderTable(fullData);
-      renderChart(fullData);
-    } catch (error) {
-      console.error("💥 Erreur lors du chargement des données:", error);
-    }
+    const json = await res.json();
+    document.getElementById("status").textContent = `🟢 Données à jour à ${new Date().toLocaleTimeString()}`;
+    fullData = json.data;
+    renderTable(fullData);
+    renderChart(fullData);
+  } catch (error) {
+    console.error("💥 Erreur:", error);
+    document.getElementById("status").textContent = "🔴 Serveur temporairement indisponible";
   }
+}
+
 
   function renderTable(data) {
     const tbody = document.querySelector("#stocks-table tbody");

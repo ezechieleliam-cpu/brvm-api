@@ -18,7 +18,7 @@ def get_brvm_stocks():
     }
 
     try:
-        response = requests.get(url, headers=headers, timeout=10)
+        response = requests.get(url, headers=headers, timeout=10, verify=False)
         soup = BeautifulSoup(response.text, "html.parser")
 
         rows = soup.select("table tbody tr")

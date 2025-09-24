@@ -7,6 +7,13 @@ import os
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
+@app.route("/cours-actions")
+def cours_actions():
+    from fetch_brvm_data import get_brvm_stocks
+    print(f"📥 Requête reçue à /cours-actions à {datetime.now().isoformat()}")
+    return jsonify(get_brvm_stocks())
+
+
 @app.route("/refresh-data")
 def refresh_data():
     from datetime import datetime

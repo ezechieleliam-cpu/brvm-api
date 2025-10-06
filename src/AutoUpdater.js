@@ -1,3 +1,8 @@
+import { isMarketOpen } from '../src/MarketScheduler';
+import { fetchNews } from '../src/NewsAggregator';
+import { cache } from '../utils/cache';
+import { StockModel } from '../models/Stock';
+
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {

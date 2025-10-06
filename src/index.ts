@@ -1,10 +1,14 @@
 import express from 'express';
 import { autoUpdate } from './services/AutoUpdater';
-import { cache } from './cache';
-import { config } from 'dotenv';
+import { cache } from './utils/cache';
+import dotenv from 'dotenv';
 dotenv.config();
+
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
+
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 const swaggerSpec = swaggerJsdoc({
   definition: {
@@ -19,10 +23,6 @@ const swaggerSpec = swaggerJsdoc({
 });
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-
-const app = express();
-const PORT = process.env.PORT || 3000;
 
 app.get('/api/brvm', (req, res) => {
   res.json(cache.get('brvmData') || []);

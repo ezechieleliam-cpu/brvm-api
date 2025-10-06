@@ -4,25 +4,14 @@ import { cache } from './utils/cache';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import swaggerUi from 'swagger-ui-express';
-import swaggerJsdoc from 'swagger-jsdoc';
+import brvmRoutes from './routes/brvm';
+import { setupSwagger } from './swagger';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const swaggerSpec = swaggerJsdoc({
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'BRVM API',
-      version: '1.0.0',
-      description: 'API pour les cours BRVM et les actualités financières'
-    }
-  },
-  apis: ['./src/index.ts']
-});
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+setupSwagger(app);
+app.use('/api', brvmRoutes);
 
 app.get('/api/brvm', (req, res) => {
   res.json(cache.get('brvmData') || []);
@@ -37,23 +26,3 @@ app.listen(PORT, () => {
   autoUpdate();
   setInterval(autoUpdate, 5 * 60 * 1000);
 });
-
-/**
- * @openapi
- * /api/brvm:
- *   get:
- *     summary: Récupère les cours BRVM
- *     responses:
- *       200:
- *         description: Liste des actions
- */
-
-/**
- * @openapi
- * /api/news:
- *   get:
- *     summary: Récupère les actualités financières
- *     responses:
- *       200:
- *         description: Liste des actualités
- */

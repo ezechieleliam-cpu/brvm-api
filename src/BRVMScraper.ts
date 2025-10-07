@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { cache } from '../utils/cache';
 import { config } from 'dotenv';
 config();
 
@@ -9,6 +8,9 @@ interface StockData {
   cours: number;
 }
 
+/**
+ * Scrape les données du site officiel BRVM
+ */
 export async function scrapeBRVM(): Promise<StockData[]> {
   try {
     const res = await axios.get(process.env.BRVM_URL!, {
@@ -19,13 +21,14 @@ export async function scrapeBRVM(): Promise<StockData[]> {
     // TODO: remplacer parseMockBRVM() par une vraie extraction avec cheerio
     return parseMockBRVM();
   } catch (error) {
-    if (error instanceof Error) {
-      console.error('❌ BRVM Error:', error.message);
-    }
+    console.error('❌ BRVM Error:', (error as Error).message);
     return [];
   }
 }
 
+/**
+ * Scrape les données du site RichBourse
+ */
 export async function scrapeRichBourse(): Promise<StockData[]> {
   try {
     const res = await axios.get(process.env.RICHBOURSE_URL!, {
@@ -36,13 +39,14 @@ export async function scrapeRichBourse(): Promise<StockData[]> {
     // TODO: remplacer parseMockRichBourse() par une vraie extraction avec cheerio
     return parseMockRichBourse();
   } catch (error) {
-    if (error instanceof Error) {
-      console.error('❌ RichBourse Error:', error.message);
-    }
+    console.error('❌ RichBourse Error:', (error as Error).message);
     return [];
   }
 }
 
+/**
+ * Données fictives BRVM pour test
+ */
 function parseMockBRVM(): StockData[] {
   return [
     { symbole: 'PALC', variation: 2.8, cours: 9245 },
@@ -50,6 +54,9 @@ function parseMockBRVM(): StockData[] {
   ];
 }
 
+/**
+ * Données fictives RichBourse pour test
+ */
 function parseMockRichBourse(): StockData[] {
   return [
     { symbole: 'PALC', variation: 2.9, cours: 9250 },

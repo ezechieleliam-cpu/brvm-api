@@ -1,6 +1,6 @@
-import { isMarketOpen } from '../MarketScheduler';
+import { isMarketOpen } from './MarketScheduler';
 import { scrapeBRVM, scrapeRichBourse } from './BRVMScraper';
-import { fetchNews } from '../NewsAggregator';
+import { fetchNews } from './NewsAggregator';
 import { cache } from '../utils/cache';
 import mongoose from 'mongoose';
 import { StockModel } from '../models/Stock';

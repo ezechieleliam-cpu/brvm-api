@@ -10,14 +10,29 @@ async function fetchNews() {
         'https://www.sikafinance.com/marches',
         'https://www.richbourse.com/actualites'
     ];
+    export async function fetchNews() {
+        return [
+            { title: "BRVM monte", source: "Ecofin", date: "2025-10-06" },
+            { title: "SIB CI performe", source: "Jeune Afrique", date: "2025-10-05" }
+        ];
+    }
     const news = [];
     for (const url of urls) {
         try {
-            const res = await axios_1.default.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-            news.push({ source: url, title: 'À parser avec cheerio', html: res.data });
+            const res = await axios_1.default.get(url, {
+                headers: { 'User-Agent': 'Mozilla/5.0' }
+            });
+            // TODO: Remplacer 'title' par un vrai titre extrait avec cheerio
+            news.push({
+                source: url,
+                title: 'À parser avec cheerio',
+                html: res.data
+            });
         }
         catch (error) {
-            console.warn(`⚠️ Erreur actualités ${url}:`, error.message);
+            if (error instanceof Error) {
+                console.warn(`⚠️ Erreur actualités ${url}:`, error.message);
+            }
         }
     }
     return news;

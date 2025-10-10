@@ -65,4 +65,27 @@ router.post('/', async (_, res) => {
  *                 newsCount:
  *                   type: number
  *                 lastUpdate:
- * 
+ */
+/**
+ * @openapi
+ * /api/brvm/status:
+ *   get:
+ *     summary: Vérifie le statut du cache BRVM
+ *     tags:
+ *       - Monitoring
+ *     responses:
+ *       200:
+ *         description: Statut du cache
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 brvmCount:
+ *                   type: number
+ *                 newsCount:
+ *                   type: number
+ *                 lastUpdate:
+ *                   type: string
+ *                   format: date-time
+ */

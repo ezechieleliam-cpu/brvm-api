@@ -1,4 +1,11 @@
 import puppeteer from 'puppeteer';
+import { scrapeBRVMFromBRVM, scrapeRichBourse } from './BRVMScraper';
+
+export async function scrapeBRVM() {
+  const dataA = await scrapeBRVMFromBRVM();
+  const dataB = await scrapeRichBourse();
+  return [...dataA, ...dataB];
+}
 
 export async function scrapeBrvmTable() {
   const browser = await puppeteer.launch({ headless: true });

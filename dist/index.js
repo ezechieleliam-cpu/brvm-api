@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const cors_1 = __importDefault(require("cors"));
 const AutoUpdater_1 = require("./AutoUpdater");
 const cache_1 = require("./utils/cache");
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
@@ -22,7 +23,8 @@ const PORT = Number(process.env.PORT) || 3000;
 mongoose_1.default.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 5000 })
     .then(() => console.log('✅ Connexion MongoDB réussie'))
     .catch((err) => console.error('❌ Erreur MongoDB :', err));
-// 📦 Middleware JSON
+// 🌐 Middleware CORS + JSON
+app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 // 📚 Swagger UI
 app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_1.default));
@@ -50,6 +52,11 @@ app.get('/api/status', (_, res) => {
         lastUpdate
     });
 });
+// 🧾 Logs de mise à jour (mocké pour extension future)
+app.get('/api/logs', (_, res) => {
+    const logs = cache_1.cache.get('updateLogs') || [];
+    res.json(logs.slice(-10)); // les 10 derniers
+});
 // 🔁 Ping & Healthcheck
 app.get('/ping', (_, res) => res.send('pong'));
 app.get('/health', (_, res) => res.send('OK'));
@@ -58,8 +65,12 @@ app.get('/health', (_, res) => res.send('OK'));
 setInterval(() => {
     (0, AutoUpdater_1.autoUpdate)();
     cache_1.cache.set('lastUpdate', new Date().toISOString());
+    // Historique des mises à jour (mock)
+    const logs = cache_1.cache.get('updateLogs') || [];
+    logs.push({ time: new Date().toISOString(), status: 'OK' });
+    cache_1.cache.set('updateLogs', logs);
 }, 5 * 60 * 1000);
 // 🚀 Lancement du serveur
 app.listen(PORT, () => {
-    console.log(`✅ API BRVM en ligne sur http://localhost:${PORT}`);
+    console.log(`✅ API BRVM en ligne sur port ${PORT} [env: ${process.env.NODE_ENV || 'dev'}]`);
 });

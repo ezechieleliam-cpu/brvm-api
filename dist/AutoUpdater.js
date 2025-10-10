@@ -55,6 +55,10 @@ async function autoUpdate() {
         await updateNews(news);
         cache_1.cache.set('brvmNews', news);
         console.log(`🧪 ${news.length} actualités mises en cache`);
+        // 🕒 Horodatage de la mise à jour
+        const timestamp = new Date().toISOString();
+        cache_1.cache.set('lastUpdate', timestamp);
+        console.log(`📅 Mise à jour terminée à ${timestamp}`);
     }
     catch (error) {
         console.error('❌ Erreur autoUpdate :', error.message);

@@ -1,133 +1,58 @@
-import { Router } from 'express';
-import { scrapeBRVM, scrapeRichBourse } from '../services/BRVMScraper';
-import { fetchNews } from '../NewsAggregator';
+import express from 'express';
+import { autoUpdate } from '../AutoUpdater';
 import { cache } from '../utils/cache';
 
-const router = Router();
+const router = express.Router();
 
 /**
  * @openapi
- * /api/brvm/live:
- *   get:
- *     summary: Scrape en direct les cours BRVM depuis plusieurs sources
+ * /api/scrape:
+ *   post:
+ *     summary: Déclenche une mise à jour complète des données BRVM et des actualités
  *     tags:
- *       - Cours BRVM
+ *       - Scraping
  *     responses:
  *       200:
- *         description: Liste consolidée des actions cotées
+ *         description: Mise à jour réussie
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   symbol:
- *                     type: string
- *                   name:
- *                     type: string
- *                   price:
- *                     type: number
- *                   change:
- *                     type: number
- *                   date:
- *                     type: string
- *                     format: date-time
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: ✅ Mise à jour BRVM déclenchée
+ *       500:
+ *         description: Erreur serveur
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: ❌ Erreur lors du scraping
  */
-router.get('/live', async (_, res) => {
+router.post('/', async (_, res) => {
   try {
-    const data = [
-      ...await scrapeBRVM(),
-      ...await scrapeRichBourse()
-    ];
-    res.json(data);
+    await autoUpdate();
+    res.status(200).json({ message: '✅ Mise à jour BRVM déclenchée' });
   } catch (error) {
-    console.error('❌ Erreur /api/brvm/live :', error);
-    res.status(500).json({ error: 'Erreur serveur' });
+    console.error('❌ Erreur /api/scrape :', error);
+    res.status(500).json({ error: '❌ Erreur lors du scraping' });
   }
 });
 
 /**
  * @openapi
- * /api/brvm:
+ * /api/scrape/status:
  *   get:
- *     summary: Récupère les cours BRVM depuis le cache
+ *     summary: Vérifie le statut actuel du cache BRVM et des actualités
  *     tags:
- *       - Cours BRVM
+ *       - Scraping
  *     responses:
  *       200:
- *         description: Liste des actions cotées en cache
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   symbol:
- *                     type: string
- *                   name:
- *                     type: string
- *                   price:
- *                     type: number
- *                   change:
- *                     type: number
- *                   date:
- *                     type: string
- *                     format: date-time
- */
-router.get('/', (_, res) => {
-  const data = cache.get('brvmData');
-  res.json(data || []);
-});
-
-/**
- * @openapi
- * /api/brvm/news:
- *   get:
- *     summary: Actualités financières du marché BRVM
- *     tags:
- *       - Actualités
- *     responses:
- *       200:
- *         description: Liste des actualités financières
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   source:
- *                     type: string
- *                   title:
- *                     type: string
- *                   html:
- *                     type: string
- *                   date:
- *                     type: string
- *                     format: date-time
- */
-router.get('/news', async (_, res) => {
-  try {
-    const news = await fetchNews();
-    res.json(news);
-  } catch (error) {
-    console.error('❌ Erreur /api/brvm/news :', error);
-    res.status(500).json({ error: 'Erreur serveur' });
-  }
-});
-
-/**
- * @openapi
- * /api/brvm/status:
- *   get:
- *     summary: Vérifie le statut du cache BRVM et des actualités
- *     tags:
- *       - Monitoring
- *     responses:
- *       200:
- *         description: Statut du cache BRVM
+ *         description: Statut du cache
  *         content:
  *           application/json:
  *             schema:
@@ -138,19 +63,4 @@ router.get('/news', async (_, res) => {
  *                 newsCount:
  *                   type: number
  *                 lastUpdate:
- *                   type: string
- *                   format: date-time
- */
-router.get('/status', (_, res) => {
-  const brvmData = cache.get('brvmData') || [];
-  const brvmNews = cache.get('brvmNews') || [];
-  const lastUpdate = cache.get('lastUpdate') || null;
-
-  res.json({
-    brvmCount: brvmData.length,
-    newsCount: brvmNews.length,
-    lastUpdate
-  });
-});
-
-export default router;
+ *                  

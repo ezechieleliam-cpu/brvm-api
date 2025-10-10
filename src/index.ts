@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 import { autoUpdate } from './AutoUpdater';
 import { cache } from './utils/cache';
@@ -23,7 +24,8 @@ mongoose.connect(process.env.MONGO_URI!, { serverSelectionTimeoutMS: 5000 })
   .then(() => console.log('✅ Connexion MongoDB réussie'))
   .catch((err) => console.error('❌ Erreur MongoDB :', err));
 
-// 📦 Middleware JSON
+// 🌐 Middleware CORS + JSON
+app.use(cors());
 app.use(express.json());
 
 // 📚 Swagger UI
@@ -58,6 +60,12 @@ app.get('/api/status', (_, res) => {
   });
 });
 
+// 🧾 Logs de mise à jour (mocké pour extension future)
+app.get('/api/logs', (_, res) => {
+  const logs = cache.get('updateLogs') || [];
+  res.json(logs.slice(-10)); // les 10 derniers
+});
+
 // 🔁 Ping & Healthcheck
 app.get('/ping', (_, res) => res.send('pong'));
 app.get('/health', (_, res) => res.send('OK'));
@@ -67,9 +75,14 @@ autoUpdate();
 setInterval(() => {
   autoUpdate();
   cache.set('lastUpdate', new Date().toISOString());
+
+  // Historique des mises à jour (mock)
+  const logs = cache.get('updateLogs') || [];
+  logs.push({ time: new Date().toISOString(), status: 'OK' });
+  cache.set('updateLogs', logs);
 }, 5 * 60 * 1000);
 
 // 🚀 Lancement du serveur
 app.listen(PORT, () => {
-  console.log(`✅ API BRVM en ligne sur http://localhost:${PORT}`);
+  console.log(`✅ API BRVM en ligne sur port ${PORT} [env: ${process.env.NODE_ENV || 'dev'}]`);
 });

@@ -1,6 +1,7 @@
 import express from 'express';
 import { autoUpdate } from '../AutoUpdater';
 import { cache } from '../utils/cache';
+import { scrapeBRVMFromBRVM, scrapeRichBourse } from './BRVMScraper';
 
 const router = express.Router();
 
@@ -62,14 +63,19 @@ router.post('/', async (_, res) => {
  *                   type: number
  *                 newsCount:
  *                   type: number
+ *                 lastUpdate:
+ *                   type: string
+ *                   format: date-time
  */
 router.get('/status', (_, res) => {
   const brvmData = cache.get('brvmData') || [];
   const brvmNews = cache.get('brvmNews') || [];
+  const lastUpdate = cache.get('lastUpdate') || null;
 
   res.json({
     brvmCount: brvmData.length,
-    newsCount: brvmNews.length
+    newsCount: brvmNews.length,
+    lastUpdate
   });
 });
 

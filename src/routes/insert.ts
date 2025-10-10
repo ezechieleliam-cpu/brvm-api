@@ -1,60 +1,76 @@
+import StockModel from '../models/StockModel.js';
 import express, { Request, Response } from 'express';
-import { StockModel } from '../models/Stock'; 
 
 const router = express.Router();
+
+const sampleData = [
+  {
+    symbol: 'SGBC',
+    name: 'Société Générale Cameroun',
+    price: 3450,
+    variation: 1.2,
+    date: new Date()
+  },
+  {
+    symbol: 'BOA',
+    name: 'Bank of Africa',
+    price: 2850,
+    variation: -0.5,
+    date: new Date()
+  }
+];
 
 /**
  * @openapi
  * /api/insert:
  *   post:
- *     summary: Insère un lot de données fictives dans MongoDB
+ *     summary: Insère un échantillon de données BRVM dans la base MongoDB
  *     tags:
  *       - Insertion
  *     responses:
- *       201:
+ *       200:
  *         description: Données insérées avec succès
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 message:
- *                   type: string
- *                 count:
- *                   type: integer
- *                 data:
+ *                 inserted:
  *                   type: array
  *                   items:
  *                     type: object
- *                     properties:
- *                       symbol:
- *                         type: string
- *                       name:
- *                         type: string
- *                       price:
- *                         type: number
- *                       change:
- *                         type: number
+ *       500:
+ *         description: Erreur serveur
  */
-router.post('/', async (req: Request, res: Response): Promise<void> => {
+router.post('/', async (_: Request, res: Response) => { 
   try {
-    const sampleData = [
-      { symbol: 'SGBC', name: 'Société Générale CI', price: 1450, change: 2.5 },
-      { symbol: 'ETIT', name: 'Ecobank Transnational', price: 22, change: -1.2 },
-      { symbol: 'BOAB', name: 'Bank of Africa', price: 520, change: 0.0 }
-    ];
-
     const inserted = await StockModel.insertMany(sampleData);
-
-    res.status(201).json({
-      message: '✅ Données insérées avec succès',
-      count: inserted.length,
-      data: inserted
-    });
+    res.json({ inserted });
   } catch (error) {
     console.error('❌ Erreur /api/insert :', error);
-    res.status(500).json({ error: 'Erreur serveur lors de l’insertion' });
+    res.status(500).json({ error: 'Erreur serveur' });
   }
+});
+
+/**
+ * @openapi
+ * /api/insert/sample:
+ *   get:
+ *     summary: Prévisualise les données d'exemple BRVM sans les insérer
+ *     tags:
+ *       - Insertion
+ *     responses:
+ *       200:
+ *         description: Données d'exemple
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ */
+router.get('/sample', (_: Request, res: Response) => {
+  res.json(sampleData);
 });
 
 export default router;

@@ -1,81 +1,66 @@
+import StockModel from '../models/StockModel.js';
 import express, { Request, Response } from 'express';
-import { StockModel } from '../models/Stock'; 
 
 const router = express.Router();
 
 /**
  * @openapi
- * /api/history:
+ * /api/history/all:
  *   get:
- *     summary: Retourne l'historique des cours BRVM avec pagination
+ *     summary: Récupère les 100 dernières entrées BRVM triées par date
  *     tags:
  *       - Historique
- *     parameters:
- *       - in: query
- *         name: page
- *         required: false
- *         schema:
- *           type: integer
- *           default: 1
- *         description: Numéro de page (par défaut 1)
- *       - in: query
- *         name: limit
- *         required: false
- *         schema:
- *           type: integer
- *           default: 10
- *         description: Nombre d'éléments par page (par défaut 10)
  *     responses:
  *       200:
- *         description: Historique paginé des cours BRVM
+ *         description: Liste des données BRVM
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 page:
- *                   type: integer
- *                 totalPages:
- *                   type: integer
- *                 totalItems:
- *                   type: integer
- *                 data:
+ *                 total:
+ *                   type: number
+ *                 stocks:
  *                   type: array
  *                   items:
  *                     type: object
- *                     properties:
- *                       symbol:
- *                         type: string
- *                       name:
- *                         type: string
- *                       price:
- *                         type: number
- *                       change:
- *                         type: number
- *                       date:
- *                         type: string
- *                         format: date-time
+ *       500:
+ *         description: Erreur serveur
  */
-router.get('/', async (req: Request, res: Response): Promise<void> => {
-  const page = Math.max(parseInt(req.query.page as string, 10) || 1, 1);
-  const limit = Math.max(parseInt(req.query.limit as string, 10) || 10, 1);
-
+router.get('/all', async (_: Request, res: Response) => { 
   try {
-    const stocks = await StockModel.find()
-      .sort({ date: -1 })
-      .skip((page - 1) * limit)
-      .limit(limit);
-
+    const stocks = await StockModel.find().sort({ date: -1 }).limit(100);
     const total = await StockModel.countDocuments();
-
-    res.json({
-      page,
-      totalPages: Math.ceil(total / limit),
-      totalItems: total,
-      data: stocks
-    });
+    res.json({ total, stocks });
   } catch (error) {
-    console.error('❌ Erreur /api/history :', error);
+    console.error('❌ Erreur /api/history/all :', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+/**
+ * @openapi
+ * /api/history/latest:
+ *   get:
+ *     summary: Récupère la dernière entrée BRVM enregistrée
+ *     tags:
+ *       - Historique
+ *     responses:
+ *       200:
+ *         description: Dernière donnée BRVM
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       500:
+ *         description: Erreur serveur
+ */
+router.get('/latest', async (_: Request, res: Response) => {
+  try {
+    const latest = await StockModel.findOne().sort({ date: -1 });
+    res.json({ latest });
+  } catch (error) {
+    console.error('❌ Erreur /api/history/latest :', error);
     res.status(500).json({ error: 'Erreur serveur' });
   }
 });

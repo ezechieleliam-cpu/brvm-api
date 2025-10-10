@@ -1,24 +1,24 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.scrapeBRVM = scrapeBRVM;
-exports.scrapeRichBourse = scrapeRichBourse;
-const axios_1 = __importDefault(require("axios"));
-const cheerio_1 = __importDefault(require("cheerio"));
-const dotenv_1 = require("dotenv");
-(0, dotenv_1.config)();
+import axios from 'axios';
+import cheerio from 'cheerio';
+import { config } from 'dotenv';
+config();
+import https from 'https'; // ajoute en haut du fichier
+const agent = new https.Agent({ rejectUnauthorized: false });
+const res = await axios.get(process.env.BRVM_URL, {
+    headers: { 'User-Agent': 'Mozilla/5.0' },
+    timeout: 15000,
+    httpsAgent: agent // ✅ ajoute cette ligne
+});
 /**
  * 🔍 Scrape les données du site officiel BRVM
  */
-async function scrapeBRVM() {
+export async function scrapeBRVMFromBRVM() {
     try {
-        const res = await axios_1.default.get(process.env.BRVM_URL, {
+        const res = await axios.get(process.env.BRVM_URL, {
             headers: { 'User-Agent': 'Mozilla/5.0' },
             timeout: 15000
         });
-        const $ = cheerio_1.default.load(res.data);
+        const $ = cheerio.load(res.data);
         const rows = $('table tbody tr');
         const data = [];
         rows.each((_, row) => {
@@ -42,13 +42,13 @@ async function scrapeBRVM() {
 /**
  * 🔍 Scrape les données du site RichBourse
  */
-async function scrapeRichBourse() {
+export async function scrapeRichBourse() {
     try {
-        const res = await axios_1.default.get(process.env.RICHBOURSE_URL, {
+        const res = await axios.get(process.env.RICHBOURSE_URL, {
             headers: { 'User-Agent': 'Mozilla/5.0' },
             timeout: 15000
         });
-        const $ = cheerio_1.default.load(res.data);
+        const $ = cheerio.load(res.data);
         const rows = $('table tbody tr');
         const data = [];
         rows.each((_, row) => {

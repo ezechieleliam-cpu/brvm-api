@@ -1,6 +1,7 @@
-import { NewsModel, INews } from '../models/NewsModel';
+import News, { INews } from '../models/NewsModel.js';
 
 export async function saveNews(news: INews[]) {
-  await NewsModel.deleteMany({});
-  await NewsModel.insertMany(news);
+  await News.deleteMany({});
+  await News.insertMany(news);
+
 }

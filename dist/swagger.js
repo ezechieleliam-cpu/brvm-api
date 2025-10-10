@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const swaggerDocument = {
     openapi: '3.0.0',
     info: {
@@ -83,4 +81,4 @@ const swaggerDocument = {
         },
     },
 };
-exports.default = swaggerDocument;
+export default swaggerDocument;

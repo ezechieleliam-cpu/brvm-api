@@ -1,19 +1,12 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.scrapeBRVM = scrapeBRVM;
-exports.scrapeRichBourse = scrapeRichBourse;
-const axios_1 = __importDefault(require("axios"));
-const dotenv_1 = require("dotenv");
-(0, dotenv_1.config)();
+import axios from 'axios';
+import { config } from 'dotenv';
+config();
 /**
  * 🔍 Scrape les données du site officiel BRVM
  */
-async function scrapeBRVM() {
+export async function scrapeBRVM() {
     try {
-        const res = await axios_1.default.get(process.env.BRVM_URL, {
+        const res = await axios.get(process.env.BRVM_URL, {
             headers: { 'User-Agent': 'Mozilla/5.0' },
             timeout: 15000
         });
@@ -28,9 +21,9 @@ async function scrapeBRVM() {
 /**
  * 🔍 Scrape les données du site RichBourse
  */
-async function scrapeRichBourse() {
+export async function scrapeRichBourse() {
     try {
-        const res = await axios_1.default.get(process.env.RICHBOURSE_URL, {
+        const res = await axios.get(process.env.RICHBOURSE_URL, {
             headers: { 'User-Agent': 'Mozilla/5.0' },
             timeout: 15000
         });

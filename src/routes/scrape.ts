@@ -1,40 +1,10 @@
-import express from 'express';
-import { autoUpdate } from '../AutoUpdater';
-import { cache } from '../utils/cache';
-import { scrapeBRVMFromBRVM, scrapeRichBourse } from './BRVMScraper';
+import express, { Request, Response } from 'express';
+import { autoUpdate } from '../AutoUpdater.js'; // ✅ extension .js
+import { cache } from '../utils/cache.js'; // ✅ extension .js
 
 const router = express.Router();
 
-/**
- * @openapi
- * /api/scrape:
- *   post:
- *     summary: Déclenche une mise à jour complète des données BRVM et des actualités
- *     tags:
- *       - Scraping
- *     responses:
- *       200:
- *         description: Mise à jour réussie
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: ✅ Mise à jour BRVM déclenchée
- *       500:
- *         description: Erreur serveur
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: ❌ Erreur lors du scraping
- */
-router.post('/', async (_, res) => {
+router.post('/', async (_: Request, res: Response) => { 
   try {
     await autoUpdate();
     res.status(200).json({ message: '✅ Mise à jour BRVM déclenchée' });
@@ -44,38 +14,12 @@ router.post('/', async (_, res) => {
   }
 });
 
-/**
- * @openapi
- * /api/scrape/status:
- *   get:
- *     summary: Vérifie le statut actuel du cache BRVM et des actualités
- *     tags:
- *       - Scraping
- *     responses:
- *       200:
- *         description: Statut du cache
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 brvmCount:
- *                   type: number
- *                 newsCount:
- *                   type: number
- *                 lastUpdate:
- *                   type: string
- *                   format: date-time
- */
-router.get('/status', (_, res) => {
-  const brvmData = cache.get('brvmData') || [];
-  const brvmNews = cache.get('brvmNews') || [];
-  const lastUpdate = cache.get('lastUpdate') || null;
+router.get('/status', (_: Request, res: Response) => {
+  res.status(200).json({
+    status: 'OK',
+    lastUpdate: cache.get('lastUpdate'),
+lastCount: cache.get('lastCount')
 
-  res.json({
-    brvmCount: brvmData.length,
-    newsCount: brvmNews.length,
-    lastUpdate
   });
 });
 

@@ -1,6 +1,7 @@
 {
   "name": "brvm-api",
   "version": "1.0.0",
+  "type": "module",
   "description": "API pour les cours BRVM et les actualités financières",
   "main": "dist/index.js",
   "scripts": {

@@ -1,21 +1,9 @@
-import { StockModel } from '../models/Stock';
+import StockModel from '../models/StockModel.js';
 
-/**
- * Enregistre un tableau d’actions BRVM dans MongoDB
- */
-export async function saveStocks(stocks: any[]): Promise<void> {
-  for (const stock of stocks) {
-    await StockModel.findOneAndUpdate(
-      { symbole: stock.symbole },
-      { ...stock, timestamp: new Date() },
-      { upsert: true, new: true }
-    );
-  }
+export async function insertManyStocks(data: any[]) {
+  return await StockModel.insertMany(data);
 }
 
-/**
- * Récupère les actions enregistrées, triées par date
- */
-export async function getStockHistory(): Promise<any[]> {
-  return StockModel.find().sort({ timestamp: -1 }).limit(100).lean();
+export async function getLatestStock() {
+  return await StockModel.findOne().sort({ date: -1 });
 }

@@ -1,34 +1,50 @@
-// src/mongoTest.ts
 import { MongoClient, ServerApiVersion } from 'mongodb';
 import mongoose from 'mongoose';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-mongoose.connect(process.env.MONGO_URI!)
-  .then(() => console.log('✅ Connexion MongoDB réussie'))
-  .catch((err) => console.error('❌ Erreur MongoDB :', err));
-
 const uri = process.env.MONGO_URI!;
+if (!uri) {
+  console.error('❌ MONGO_URI manquant dans .env');
+  process.exit(1);
+}
 
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true
+// 🔍 Test avec Mongoose
+async function testMongoose() {
+  try {
+    await mongoose.connect(uri);
+    console.log('✅ [Mongoose] Connexion réussie');
+  } catch (err: any) {
+    console.error('❌ [Mongoose] Erreur :', err.message);
+  } finally {
+    await mongoose.disconnect();
   }
-});
+}
 
-async function run() {
+// 🔍 Test avec MongoDB natif
+async function testNativeMongo() {
+  const client = new MongoClient(uri, {
+    serverApi: {
+      version: ServerApiVersion.v1,
+      strict: true,
+      deprecationErrors: true
+    }
+  });
+
   try {
     await client.connect();
-    await client.db("admin").command({ ping: 1 });
-    console.log("✅ Connexion MongoDB réussie !");
+    await client.db('admin').command({ ping: 1 });
+    console.log('✅ [MongoClient] Connexion réussie');
   } catch (error) {
-    console.error("❌ Erreur MongoDB :", error);
+    console.error('❌ [MongoClient] Erreur :', error);
   } finally {
     await client.close();
   }
 }
 
-run().catch(console.dir);
+// 🚀 Lancer les deux tests
+(async () => {
+  await testMongoose();
+  await testNativeMongo();
+})();

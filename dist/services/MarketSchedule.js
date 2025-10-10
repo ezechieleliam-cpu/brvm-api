@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.isMarketOpen = isMarketOpen;
-function isMarketOpen() {
+export function isMarketOpen() {
     const now = new Date();
     const day = now.getDay(); // 0 = dimanche, 6 = samedi
     const hour = now.getHours();

@@ -1,10 +1,11 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
-interface NewsItem {
+export interface NewsItem {
   source: string;
   title: string;
   html: string;
+  date: Date;
 }
 
 export async function fetchNews(): Promise<NewsItem[]> {
@@ -16,7 +17,7 @@ export async function fetchNews(): Promise<NewsItem[]> {
     'https://www.richbourse.com/common/variation/index',
     'https://www.richbourse.com/common/actualite/index',
     'https://www.richbourse.com/common/mouvements/index',
-    'https://www.richbourse.com/common/apprendre/articles',
+    'https://www.richbourse.com/common/apprendre/articles'
   ];
 
   const news: NewsItem[] = [];
@@ -24,7 +25,8 @@ export async function fetchNews(): Promise<NewsItem[]> {
   for (const url of urls) {
     try {
       const res = await axios.get(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0' }
+        headers: { 'User-Agent': 'Mozilla/5.0' },
+        timeout: 15000
       });
 
       const $ = cheerio.load(res.data);
@@ -33,7 +35,14 @@ export async function fetchNews(): Promise<NewsItem[]> {
         $('.bloc-actu .title a').each((_, el) => {
           const title = $(el).text().trim();
           const html = $.html(el);
-          if (title) news.push({ source: 'Sikafinance', title, html });
+          if (title) {
+            news.push({
+              source: 'Sikafinance',
+              title,
+              html,
+              date: new Date() // ✅ requis pour MongoDB
+            });
+          }
         });
       }
 
@@ -41,7 +50,14 @@ export async function fetchNews(): Promise<NewsItem[]> {
         $('.card-title a').each((_, el) => {
           const title = $(el).text().trim();
           const html = $.html(el);
-          if (title) news.push({ source: 'RichBourse', title, html });
+          if (title) {
+            news.push({
+              source: 'RichBourse',
+              title,
+              html,
+              date: new Date() // ✅ requis pour MongoDB
+            });
+          }
         });
       }
     } catch (error) {
@@ -55,12 +71,14 @@ export async function fetchNews(): Promise<NewsItem[]> {
       {
         source: 'Ecofin',
         title: 'BRVM monte',
-        html: '<p>Actualité fictive du 2025-10-06</p>'
+        html: '<p>Actualité fictive du 2025-10-06</p>',
+        date: new Date('2025-10-06')
       },
       {
         source: 'Jeune Afrique',
         title: 'SIB CI performe',
-        html: '<p>Actualité fictive du 2025-10-05</p>'
+        html: '<p>Actualité fictive du 2025-10-05</p>',
+        date: new Date('2025-10-05')
       }
     );
   } else {

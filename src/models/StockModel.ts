@@ -1,13 +1,20 @@
 import mongoose from 'mongoose';
 
-const stockSchema = new mongoose.Schema({
+export interface IStock {
+  symbol: string;
+  name: string;
+  price: number;
+  variation: number;
+  date: Date;
+}
+
+const stockSchema = new mongoose.Schema<IStock>({
   symbol: { type: String, required: true },
   name: { type: String, required: true },
   price: { type: Number, required: true },
-  change: { type: Number, required: true },
-  date: { type: Date, default: Date.now }
+  variation: { type: Number, required: true },
+  date: { type: Date, required: true }
 });
 
-stockSchema.index({ symbol: 1 });
-
-export const StockModel = mongoose.models.Stock || mongoose.model('Stock', stockSchema);
+const Stock = mongoose.model<IStock>('Stock', stockSchema);
+export default Stock; // ✅ export par défaut

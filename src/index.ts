@@ -3,16 +3,17 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 
-import { autoUpdate } from './AutoUpdater';
-import { cache } from './utils/cache';
+import { autoUpdate } from './AutoUpdater.js'; // ✅ extension .js requise en ES modules
+import { cache } from './utils/cache.js';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './swagger';
+import swaggerDocument from './swagger.js';
 
-import brvmRoutes from './routes/brvm';
-import historyRoute from './routes/history';
-import insertRoute from './routes/insert';
-import scrapeRoute from './routes/scrape';
-import newsRoute from './routes/news';
+import newsRoute from './routes/news.js';
+import brvmRoutes from './routes/brvm.js';
+import historyRoute from './routes/history.js';
+import insertRoute from './routes/insert.js';
+import scrapeRoute from './routes/scrape.js';
+import News from './models/NewsModel.js';
 
 dotenv.config();
 
@@ -20,9 +21,12 @@ const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 
 // 🧠 Connexion à MongoDB
-mongoose.connect(process.env.MONGO_URI!, { serverSelectionTimeoutMS: 5000 })
-  .then(() => console.log('✅ Connexion MongoDB réussie'))
-  .catch((err) => console.error('❌ Erreur MongoDB :', err));
+mongoose.connect(process.env.MONGO_URI!)
+.then(() => console.log('✅ Connexion MongoDB réussie'))
+.catch((err) => {
+  console.error('❌ Erreur MongoDB :', err.message);
+  process.exit(1);
+});
 
 // 🌐 Middleware CORS + JSON
 app.use(cors());
@@ -76,7 +80,6 @@ setInterval(() => {
   autoUpdate();
   cache.set('lastUpdate', new Date().toISOString());
 
-  // Historique des mises à jour (mock)
   const logs = cache.get('updateLogs') || [];
   logs.push({ time: new Date().toISOString(), status: 'OK' });
   cache.set('updateLogs', logs);

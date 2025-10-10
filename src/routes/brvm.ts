@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { scrapeBRVM, scrapeRichBourse } from '../services/BRVMScraper';
 import { fetchNews } from '../NewsAggregator';
+import { cache } from '../utils/cache';
 
 const router = Router();
 

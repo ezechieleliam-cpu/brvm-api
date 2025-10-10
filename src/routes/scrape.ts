@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { scrapeBRVM } from '../services/BRVMScraper';
+import { autoUpdate } from '../AutoUpdater';
 
 const router = express.Router();
 
@@ -27,13 +28,13 @@ const router = express.Router();
  *                   variation:
  *                     type: number
  */
-router.get('/scrape-all', async (req: Request, res: Response): Promise<void> => {
+
+router.post('/', async (_, res) => {
   try {
-    const data = await scrapeBRVM();
-    res.json(data);
+    await autoUpdate();
+    res.status(200).json({ message: '✅ Mise à jour BRVM déclenchée' });
   } catch (error) {
-    console.error('❌ Erreur scraping BRVM :', error);
-    res.status(500).json({ error: 'Scraping échoué' });
+    res.status(500).json({ error: '❌ Erreur lors du scraping' });
   }
 });
 

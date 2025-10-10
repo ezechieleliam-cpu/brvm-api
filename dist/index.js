@@ -32,19 +32,33 @@ app.use('/api/insert', insert_1.default);
 app.use('/api/scrape', scrape_1.default);
 app.use('/api/brvm', brvm_1.default);
 app.use('/api/news', news_1.default);
-// 📊 Routes en cache
+// 📊 Routes en cache (lecture rapide)
 app.get('/api/brvm', (_, res) => {
     res.json(cache_1.cache.get('brvmData') || []);
 });
 app.get('/api/news', (_, res) => {
     res.json(cache_1.cache.get('brvmNews') || []);
 });
+// 📈 Statut du cache
+app.get('/api/status', (_, res) => {
+    const brvmData = cache_1.cache.get('brvmData') || [];
+    const brvmNews = cache_1.cache.get('brvmNews') || [];
+    const lastUpdate = cache_1.cache.get('lastUpdate') || null;
+    res.json({
+        brvmCount: brvmData.length,
+        newsCount: brvmNews.length,
+        lastUpdate
+    });
+});
 // 🔁 Ping & Healthcheck
 app.get('/ping', (_, res) => res.send('pong'));
 app.get('/health', (_, res) => res.send('OK'));
-// 🔄 Mise à jour automatique
+// 🔄 Mise à jour automatique au démarrage + toutes les 5 minutes
 (0, AutoUpdater_1.autoUpdate)();
-setInterval(AutoUpdater_1.autoUpdate, 5 * 60 * 1000); // toutes les 5 minutes
+setInterval(() => {
+    (0, AutoUpdater_1.autoUpdate)();
+    cache_1.cache.set('lastUpdate', new Date().toISOString());
+}, 5 * 60 * 1000);
 // 🚀 Lancement du serveur
 app.listen(PORT, () => {
     console.log(`✅ API BRVM en ligne sur http://localhost:${PORT}`);

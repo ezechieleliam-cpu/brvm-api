@@ -36,7 +36,7 @@ app.use('/api/scrape', scrapeRoute);
 app.use('/api/brvm', brvmRoutes);
 app.use('/api/news', newsRoute);
 
-// 📊 Routes en cache
+// 📊 Routes en cache (lecture rapide)
 app.get('/api/brvm', (_, res) => {
   res.json(cache.get('brvmData') || []);
 });
@@ -45,13 +45,29 @@ app.get('/api/news', (_, res) => {
   res.json(cache.get('brvmNews') || []);
 });
 
+// 📈 Statut du cache
+app.get('/api/status', (_, res) => {
+  const brvmData = cache.get('brvmData') || [];
+  const brvmNews = cache.get('brvmNews') || [];
+  const lastUpdate = cache.get('lastUpdate') || null;
+
+  res.json({
+    brvmCount: brvmData.length,
+    newsCount: brvmNews.length,
+    lastUpdate
+  });
+});
+
 // 🔁 Ping & Healthcheck
 app.get('/ping', (_, res) => res.send('pong'));
 app.get('/health', (_, res) => res.send('OK'));
 
-// 🔄 Mise à jour automatique
+// 🔄 Mise à jour automatique au démarrage + toutes les 5 minutes
 autoUpdate();
-setInterval(autoUpdate, 5 * 60 * 1000); // toutes les 5 minutes
+setInterval(() => {
+  autoUpdate();
+  cache.set('lastUpdate', new Date().toISOString());
+}, 5 * 60 * 1000);
 
 // 🚀 Lancement du serveur
 app.listen(PORT, () => {

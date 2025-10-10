@@ -9,7 +9,7 @@ const axios_1 = __importDefault(require("axios"));
 const dotenv_1 = require("dotenv");
 (0, dotenv_1.config)();
 /**
- * Scrape les données du site officiel BRVM
+ * 🔍 Scrape les données du site officiel BRVM
  */
 async function scrapeBRVM() {
     try {
@@ -17,7 +17,7 @@ async function scrapeBRVM() {
             headers: { 'User-Agent': 'Mozilla/5.0' },
             timeout: 15000
         });
-        // TODO: remplacer parseMockBRVM() par une vraie extraction avec cheerio
+        // TODO: remplacer parseMockBRVM() par une vraie extraction avec cheerio ou puppeteer
         return parseMockBRVM();
     }
     catch (error) {
@@ -26,7 +26,7 @@ async function scrapeBRVM() {
     }
 }
 /**
- * Scrape les données du site RichBourse
+ * 🔍 Scrape les données du site RichBourse
  */
 async function scrapeRichBourse() {
     try {
@@ -34,7 +34,7 @@ async function scrapeRichBourse() {
             headers: { 'User-Agent': 'Mozilla/5.0' },
             timeout: 15000
         });
-        // TODO: remplacer parseMockRichBourse() par une vraie extraction avec cheerio
+        // TODO: remplacer parseMockRichBourse() par une vraie extraction avec cheerio ou puppeteer
         return parseMockRichBourse();
     }
     catch (error) {
@@ -43,7 +43,7 @@ async function scrapeRichBourse() {
     }
 }
 /**
- * Données fictives BRVM pour test
+ * 🧪 Données fictives BRVM pour test
  */
 function parseMockBRVM() {
     return [
@@ -52,7 +52,7 @@ function parseMockBRVM() {
     ];
 }
 /**
- * Données fictives RichBourse pour test
+ * 🧪 Données fictives RichBourse pour test
  */
 function parseMockRichBourse() {
     return [

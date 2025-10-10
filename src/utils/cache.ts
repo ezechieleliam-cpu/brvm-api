@@ -1,3 +1,3 @@
-const cache = new Map<string, any>();
-export { cache };
+export const cache = new Map<string, any>();
+
 

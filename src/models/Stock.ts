@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 
 const stockSchema = new mongoose.Schema({
-  name: String,
   symbol: String,
+  name: String,
   price: Number,
   change: Number,
-  updatedAt: Date
+  date: Date
 });
 
 export const StockModel = mongoose.model('Stock', stockSchema);

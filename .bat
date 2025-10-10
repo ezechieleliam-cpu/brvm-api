@@ -1,0 +1,6 @@
+@echo off
+echo 🔄 Compilation du test cheerio...
+tsc src/testCheerio.ts --outDir dist
+echo 🚀 Exécution du test...
+node dist/testCheerio.js
+pause

@@ -1,15 +1,16 @@
 import axios from 'axios';
+import cheerio from 'cheerio';
 import { config } from 'dotenv';
 config();
 
-interface StockData {
+export interface StockData {
   symbole: string;
   variation: number;
   cours: number;
 }
 
 /**
- * Scrape les données du site officiel BRVM
+ * 🔍 Scrape les données du site officiel BRVM
  */
 export async function scrapeBRVM(): Promise<StockData[]> {
   try {
@@ -18,8 +19,26 @@ export async function scrapeBRVM(): Promise<StockData[]> {
       timeout: 15000
     });
 
-    // TODO: remplacer parseMockBRVM() par une vraie extraction avec cheerio
-    return parseMockBRVM();
+    const $ = cheerio.load(res.data);
+    const rows = $('table tbody tr');
+    const data: StockData[] = [];
+
+    rows.each((_, row) => {
+      const cells = $(row).find('td');
+
+      const symbole = $(cells[0]).text().trim();
+      const coursText = $(cells[1]).text().trim().replace(',', '.');
+      const variationText = $(cells[2]).text().trim().replace(',', '.');
+
+      const cours = parseFloat(coursText);
+      const variation = parseFloat(variationText);
+
+      if (symbole && !isNaN(cours) && !isNaN(variation)) {
+        data.push({ symbole, cours, variation });
+      }
+    });
+
+    return data;
   } catch (error) {
     console.error('❌ BRVM Error:', (error as Error).message);
     return [];
@@ -27,7 +46,7 @@ export async function scrapeBRVM(): Promise<StockData[]> {
 }
 
 /**
- * Scrape les données du site RichBourse
+ * 🔍 Scrape les données du site RichBourse
  */
 export async function scrapeRichBourse(): Promise<StockData[]> {
   try {
@@ -36,30 +55,28 @@ export async function scrapeRichBourse(): Promise<StockData[]> {
       timeout: 15000
     });
 
-    // TODO: remplacer parseMockRichBourse() par une vraie extraction avec cheerio
-    return parseMockRichBourse();
+    const $ = cheerio.load(res.data);
+    const rows = $('table tbody tr');
+    const data: StockData[] = [];
+
+    rows.each((_, row) => {
+      const cells = $(row).find('td');
+
+      const symbole = $(cells[0]).text().trim();
+      const coursText = $(cells[1]).text().trim().replace(',', '.');
+      const variationText = $(cells[2]).text().trim().replace(',', '.');
+
+      const cours = parseFloat(coursText);
+      const variation = parseFloat(variationText);
+
+      if (symbole && !isNaN(cours) && !isNaN(variation)) {
+        data.push({ symbole, cours, variation });
+      }
+    });
+
+    return data;
   } catch (error) {
     console.error('❌ RichBourse Error:', (error as Error).message);
     return [];
   }
-}
-
-/**
- * Données fictives BRVM pour test
- */
-function parseMockBRVM(): StockData[] {
-  return [
-    { symbole: 'PALC', variation: 2.8, cours: 9245 },
-    { symbole: 'SOGC', variation: 1.5, cours: 8420 }
-  ];
-}
-
-/**
- * Données fictives RichBourse pour test
- */
-function parseMockRichBourse(): StockData[] {
-  return [
-    { symbole: 'PALC', variation: 2.9, cours: 9250 },
-    { symbole: 'SOGC', variation: 1.4, cours: 8415 }
-  ];
 }

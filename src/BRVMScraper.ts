@@ -2,14 +2,14 @@ import axios from 'axios';
 import { config } from 'dotenv';
 config();
 
-interface StockData {
+export interface StockData {
   symbole: string;
   variation: number;
   cours: number;
 }
 
 /**
- * Scrape les données du site officiel BRVM
+ * 🔍 Scrape les données du site officiel BRVM
  */
 export async function scrapeBRVM(): Promise<StockData[]> {
   try {
@@ -18,7 +18,7 @@ export async function scrapeBRVM(): Promise<StockData[]> {
       timeout: 15000
     });
 
-    // TODO: remplacer parseMockBRVM() par une vraie extraction avec cheerio
+    // TODO: remplacer parseMockBRVM() par une vraie extraction avec cheerio ou puppeteer
     return parseMockBRVM();
   } catch (error) {
     console.error('❌ BRVM Error:', (error as Error).message);
@@ -27,7 +27,7 @@ export async function scrapeBRVM(): Promise<StockData[]> {
 }
 
 /**
- * Scrape les données du site RichBourse
+ * 🔍 Scrape les données du site RichBourse
  */
 export async function scrapeRichBourse(): Promise<StockData[]> {
   try {
@@ -36,7 +36,7 @@ export async function scrapeRichBourse(): Promise<StockData[]> {
       timeout: 15000
     });
 
-    // TODO: remplacer parseMockRichBourse() par une vraie extraction avec cheerio
+    // TODO: remplacer parseMockRichBourse() par une vraie extraction avec cheerio ou puppeteer
     return parseMockRichBourse();
   } catch (error) {
     console.error('❌ RichBourse Error:', (error as Error).message);
@@ -45,7 +45,7 @@ export async function scrapeRichBourse(): Promise<StockData[]> {
 }
 
 /**
- * Données fictives BRVM pour test
+ * 🧪 Données fictives BRVM pour test
  */
 function parseMockBRVM(): StockData[] {
   return [
@@ -55,7 +55,7 @@ function parseMockBRVM(): StockData[] {
 }
 
 /**
- * Données fictives RichBourse pour test
+ * 🧪 Données fictives RichBourse pour test
  */
 function parseMockRichBourse(): StockData[] {
   return [

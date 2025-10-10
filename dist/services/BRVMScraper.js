@@ -6,10 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.scrapeBRVM = scrapeBRVM;
 exports.scrapeRichBourse = scrapeRichBourse;
 const axios_1 = __importDefault(require("axios"));
+const cheerio_1 = __importDefault(require("cheerio"));
 const dotenv_1 = require("dotenv");
 (0, dotenv_1.config)();
 /**
- * Scrape les données du site officiel BRVM
+ * 🔍 Scrape les données du site officiel BRVM
  */
 async function scrapeBRVM() {
     try {
@@ -17,8 +18,21 @@ async function scrapeBRVM() {
             headers: { 'User-Agent': 'Mozilla/5.0' },
             timeout: 15000
         });
-        // TODO: remplacer parseMockBRVM() par une vraie extraction avec cheerio
-        return parseMockBRVM();
+        const $ = cheerio_1.default.load(res.data);
+        const rows = $('table tbody tr');
+        const data = [];
+        rows.each((_, row) => {
+            const cells = $(row).find('td');
+            const symbole = $(cells[0]).text().trim();
+            const coursText = $(cells[1]).text().trim().replace(',', '.');
+            const variationText = $(cells[2]).text().trim().replace(',', '.');
+            const cours = parseFloat(coursText);
+            const variation = parseFloat(variationText);
+            if (symbole && !isNaN(cours) && !isNaN(variation)) {
+                data.push({ symbole, cours, variation });
+            }
+        });
+        return data;
     }
     catch (error) {
         console.error('❌ BRVM Error:', error.message);
@@ -26,7 +40,7 @@ async function scrapeBRVM() {
     }
 }
 /**
- * Scrape les données du site RichBourse
+ * 🔍 Scrape les données du site RichBourse
  */
 async function scrapeRichBourse() {
     try {
@@ -34,29 +48,24 @@ async function scrapeRichBourse() {
             headers: { 'User-Agent': 'Mozilla/5.0' },
             timeout: 15000
         });
-        // TODO: remplacer parseMockRichBourse() par une vraie extraction avec cheerio
-        return parseMockRichBourse();
+        const $ = cheerio_1.default.load(res.data);
+        const rows = $('table tbody tr');
+        const data = [];
+        rows.each((_, row) => {
+            const cells = $(row).find('td');
+            const symbole = $(cells[0]).text().trim();
+            const coursText = $(cells[1]).text().trim().replace(',', '.');
+            const variationText = $(cells[2]).text().trim().replace(',', '.');
+            const cours = parseFloat(coursText);
+            const variation = parseFloat(variationText);
+            if (symbole && !isNaN(cours) && !isNaN(variation)) {
+                data.push({ symbole, cours, variation });
+            }
+        });
+        return data;
     }
     catch (error) {
         console.error('❌ RichBourse Error:', error.message);
         return [];
     }
-}
-/**
- * Données fictives BRVM pour test
- */
-function parseMockBRVM() {
-    return [
-        { symbole: 'PALC', variation: 2.8, cours: 9245 },
-        { symbole: 'SOGC', variation: 1.5, cours: 8420 }
-    ];
-}
-/**
- * Données fictives RichBourse pour test
- */
-function parseMockRichBourse() {
-    return [
-        { symbole: 'PALC', variation: 2.9, cours: 9250 },
-        { symbole: 'SOGC', variation: 1.4, cours: 8415 }
-    ];
 }

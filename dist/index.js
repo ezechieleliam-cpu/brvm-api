@@ -14,11 +14,18 @@ import scrapeRoute from './routes/scrape.js';
 dotenv.config();
 const app = express();
 // 🧠 Connexion à MongoDB
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('✅ Connexion MongoDB réussie'))
-    .catch((err) => {
-    console.error('❌ Erreur MongoDB :', err.message);
-    process.exit(1);
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+    .then(() => {
+    console.log('✅ MongoDB connected');
+    app.listen(PORT, () => {
+        console.log(`✅ Server running on port ${PORT}`);
+    });
+})
+    .catch(err => {
+    console.error('❌ MongoDB connection error:', err);
 });
 // 🌐 Middleware CORS + JSON
 app.use(cors());

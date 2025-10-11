@@ -1,8 +1,17 @@
 import News from '../models/NewsModel.js';
 import express, { Request, Response } from 'express';
-
+import mongoose from 'mongoose';
 
 const router = express.Router();
+
+mongoose.connection.once('open', async () => {
+  try {
+    await News.insertMany([...]); // ton tableau de news ici
+    console.log('✅ News insérées après connexion MongoDB');
+  } catch (err) {
+    console.error('❌ Erreur insertMany:', err);
+  }
+});
 
 router.get('/', async (_: Request, res: Response) => {
   try {

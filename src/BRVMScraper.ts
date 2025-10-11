@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { scrapeBRVMFromBRVM } from '../BRVMScraper';
 import { config } from 'dotenv';
 config();
 
@@ -11,7 +12,7 @@ export interface StockData {
 /**
  * 🔍 Scrape les données du site officiel BRVM
  */
-export function scrapeBRVMFromBRVM() {
+export async function scrapeBRVMFromBRVM(): Promise<StockData[]> {
   try {
     const res = await axios.get(process.env.BRVM_URL!, {
       headers: { 'User-Agent': 'Mozilla/5.0' },

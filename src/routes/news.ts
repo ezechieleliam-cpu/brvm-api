@@ -1,4 +1,4 @@
-import News from '../models/news'; // ✅ sans extension .js
+import News from '../models/news';
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 

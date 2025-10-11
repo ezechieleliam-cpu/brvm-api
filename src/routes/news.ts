@@ -1,4 +1,4 @@
-import News from '../models/news.js';
+import News from '../models/news'; // ✅ sans extension .js
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 
@@ -7,17 +7,23 @@ const router = express.Router();
 mongoose.connection.once('open', async () => {
   try {
     await News.insertMany([
-  {
-    title: "BRVM Weekly Update",
-    content: "The market closed higher this week with gains in banking and telecom sectors.",
-    date: new Date(),
-  },
-  {
-    title: "New Listing: ECOBANK Bonds",
-    content: "ECOBANK has listed new bonds on the BRVM with a 6.5% yield.",
-    date: new Date(),
+      {
+        title: "BRVM Weekly Update",
+        content: "The market closed higher this week with gains in banking and telecom sectors.",
+        date: new Date(),
+      },
+      {
+        title: "New Listing: ECOBANK Bonds",
+        content: "ECOBANK has listed new bonds on the BRVM with a 6.5% yield.",
+        date: new Date(),
+      }
+    ]);
+    console.log('✅ News insérées après connexion MongoDB');
+  } catch (err) {
+    console.error('❌ Erreur insertMany:', err);
   }
-]);
+});
+
 router.get('/', async (_: Request, res: Response) => {
   try {
     const news = await News.find().sort({ date: -1 }).limit(10);

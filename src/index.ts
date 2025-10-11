@@ -18,12 +18,11 @@ import News from '../models/news.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 
 // 🧠 Connexion à MongoDB
 mongoose.connect(process.env.MONGO_URI!, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+  
 })
 .then(() => {
   console.log('✅ MongoDB connected');

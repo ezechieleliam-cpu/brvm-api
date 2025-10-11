@@ -13,12 +13,9 @@ import insertRoute from './routes/insert.js';
 import scrapeRoute from './routes/scrape.js';
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 // 🧠 Connexion à MongoDB
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
+mongoose.connect(process.env.MONGO_URI, {})
     .then(() => {
     console.log('✅ MongoDB connected');
     app.listen(PORT, () => {

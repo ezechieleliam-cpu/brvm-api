@@ -1,4 +1,4 @@
-import News from '../models/NewsModel.js';
+import News from '../models/news.js';
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 

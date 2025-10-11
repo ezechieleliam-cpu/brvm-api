@@ -13,12 +13,12 @@ import brvmRoutes from './routes/brvm.js';
 import historyRoute from './routes/history.js';
 import insertRoute from './routes/insert.js';
 import scrapeRoute from './routes/scrape.js';
-import News from './models/NewsModel.js';
+import News from '../models/news.js';
 
 dotenv.config();
 
 const app = express();
-
+const PORT = process.env.PORT || 3000;
 
 // 🧠 Connexion à MongoDB
 mongoose.connect(process.env.MONGO_URI!, {
@@ -51,7 +51,7 @@ app.use(express.json());
 app.use('/api/news', newsRoute);
 app.use('/api/stocks', brvmRoutes);
 
-const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

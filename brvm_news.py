@@ -30,3 +30,6 @@ try:
 
 except requests.exceptions.RequestException as e:
     st.error(f"❌ Erreur lors de la récupération des actualités : {e}")
+
+
+ 

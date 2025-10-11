@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { autoUpdate } from '../AutoUpdater.js'; // ✅ extension .js
 import { cache } from '../utils/cache.js'; // ✅ extension .js
-import { scrapeBRVMFromBRVM } from './BRVMScraper';
+import { scrapeBRVMFromBRVM } from '../BRVMScraper';
 
 const router = express.Router();
 

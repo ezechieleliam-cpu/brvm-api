@@ -7,13 +7,12 @@ import { cache } from './utils/cache.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './swagger.js';
 import newsRoute from './routes/news.js';
-import brvmRoutes from './routes/brvm';
+import brvmRoutes from './routes/brvm.js';
 import historyRoute from './routes/history.js';
 import insertRoute from './routes/insert.js';
 import scrapeRoute from './routes/scrape.js';
 dotenv.config();
 const app = express();
-const PORT = Number(process.env.PORT) || 3000;
 // 🧠 Connexion à MongoDB
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('✅ Connexion MongoDB réussie'))
@@ -31,7 +30,13 @@ app.use('/api/history', historyRoute);
 app.use('/api/insert', insertRoute);
 app.use('/api/scrape', scrapeRoute);
 app.use('/api/brvm', brvmRoutes);
+app.use(express.json());
 app.use('/api/news', newsRoute);
+app.use('/api/stocks', brvmRoutes);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
 // 📊 Routes en cache (lecture rapide)
 app.get('/api/brvm', (_, res) => {
     res.json(cache.get('brvmData') || []);

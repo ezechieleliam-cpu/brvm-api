@@ -26,16 +26,8 @@ const router = express.Router();
  *                   type: string
  *                   format: date-time
  */
-router.get('/status', (_, res) => {
-  const brvmData = cache.get('brvmData') || [];
-  const brvmNews = cache.get('brvmNews') || [];
-  const lastUpdate = cache.get('lastUpdate') || null;
-
-  res.status(200).json({
-    brvmCount: brvmData.length,
-    newsCount: brvmNews.length,
-    lastUpdate
-  });
+router.get('/', (req, res) => {
+  res.json({ message: 'BRVM stocks endpoint is live ✅' });
 });
 
 export default router;

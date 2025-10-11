@@ -18,7 +18,7 @@ import News from './models/NewsModel.js';
 dotenv.config();
 
 const app = express();
-const PORT = Number(process.env.PORT) || 3000;
+
 
 // 🧠 Connexion à MongoDB
 mongoose.connect(process.env.MONGO_URI!)

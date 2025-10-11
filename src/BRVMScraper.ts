@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { scrapeBRVMFromBRVM } from '../BRVMScraper';
 import { config } from 'dotenv';
 config();
 

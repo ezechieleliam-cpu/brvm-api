@@ -1,8 +1,14 @@
 fastapi
 uvicorn
+HEAD
 certifi 
 flask
 flask-cors
 requests
 beautifulsoup4
 lxml
+beautifulsoup4
+certifi
+flask
+requests
+31634db (Initial BRVM API)

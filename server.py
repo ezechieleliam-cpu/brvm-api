@@ -1,3 +1,4 @@
+HEAD
 from flask import Flask, jsonify, render_template
 from flask_cors import CORS
 from fetch_brvm_data import get_brvm_stocks, get_brvm_data_with_ssl
@@ -59,11 +60,18 @@ def refresh_data():
 
 
 # 🔐 Test SSL avec certificat
+from flask import Flask, jsonify
+from fetch_brvm_data import get_brvm_data_with_ssl
+
+app = Flask(__name__)
+
+31634db (Initial BRVM API)
 @app.route("/api/brvm")
 def brvm():
     result = get_brvm_data_with_ssl()
     return jsonify(result)
 
+HEAD
 # 📜 Lecture du dernier log SSL
 @app.route("/logs/ssl")
 def ssl_log():
@@ -94,3 +102,7 @@ def favicon():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))  # ✅ Compatible Render
     app.run(host="0.0.0.0", port=port)
+
+if __name__ == "__main__":
+    app.run(debug=True)
+    31634db (Initial BRVM API)

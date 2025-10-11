@@ -7,7 +7,7 @@ import { cache } from './utils/cache.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './swagger.js';
 import newsRoute from './routes/news.js';
-import brvmRoutes from './routes/brvm.js';
+import brvmRoutes from './routes/brvm';
 import historyRoute from './routes/history.js';
 import insertRoute from './routes/insert.js';
 import scrapeRoute from './routes/scrape.js';

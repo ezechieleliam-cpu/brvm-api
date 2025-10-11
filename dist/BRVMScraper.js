@@ -4,7 +4,7 @@ config();
 /**
  * 🔍 Scrape les données du site officiel BRVM
  */
-export async function scrapeBRVM() {
+export async function scrapeBRVMFromBRVM() {
     try {
         const res = await axios.get(process.env.BRVM_URL, {
             headers: { 'User-Agent': 'Mozilla/5.0' },

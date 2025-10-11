@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 """
 Script Python pour récupérer les données BRVM avec certificat SSL
@@ -64,6 +65,40 @@ def get_brvm_data_with_ssl():
 import ssl
 import urllib3
 from datetime import datetime
+from bs4 import BeautifulSoup
+
+def get_brvm_stocks():
+    url = "https://www.brvm.org/fr/cours-actions/0"
+    headers = {
+        'User-Agent': 'Mozilla/5.0',
+        'Accept-Language': 'fr-FR,fr;q=0.9',
+    }
+
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        rows = soup.select("table tbody tr")
+        stocks = []
+
+        for row in rows:
+            cols = row.find_all("td")
+            if len(cols) >= 7:
+                stocks.append({
+                    "symbol": cols[0].text.strip(),
+                    "name": cols[1].text.strip(),
+                    "volume": cols[2].text.strip(),
+                    "prev_close": cols[3].text.strip(),
+                    "open": cols[4].text.strip(),
+                    "close": cols[5].text.strip(),
+                    "variation": cols[6].text.strip()
+                })
+
+        return stocks
+
+    except Exception as e:
+        return [{"error": str(e)}]
+
 
 # Configuration SSL
 def get_brvm_data_with_ssl():
@@ -187,6 +222,7 @@ def test_alternative_endpoints():
             print(f"❌ {endpoint} - Erreur: {e}")
 
 if __name__ == "__main__":
+<<<<<<< HEAD
           HEAD
     print("📦 Test de récupération des actions BRVM")
     data = get_brvm_stocks()
@@ -220,18 +256,39 @@ if __name__ == "__main__":
     test_alternative_endpoints()
     print("\n✅ Script terminé")
 
+=======
+        print("📦 Test de récupération des actions BRVM")
+    data = get_brvm_stocks()
+    print(json.dumps(data[:5], indent=2, ensure_ascii=False))  # Affiche les 5 premières
+>>>>>>> d901e9f (Initial BRVM API)
     print("🚀 BRVM SSL Data Fetcher")
     print("=" * 50)
     
     # Test principal
     result = get_brvm_data_with_ssl()
-    
-    if result["success"]:
-        print("\n🎉 Test SSL réussi!")
-        print(json.dumps(result, indent=2, ensure_ascii=False))
-    else:
-        print("\n⚠️ Échec du test SSL")
-        print(f"Erreur: {result.get('error', 'Erreur inconnue')}")
+
+# ✅ Sauvegarde dans un fichier JSON
+try:
+    with open("brvm_ssl_result.json", "w", encoding="utf-8") as f:
+        json.dump(result, f, indent=2, ensure_ascii=False)
+    print("💾 Résultat SSL sauvegardé dans brvm_ssl_result.json")
+except Exception as e:
+    print(f"❌ Erreur lors de la sauvegarde JSON : {e}")
+
+# ✅ Log horodaté dans un fichier texte
+try:
+    with open("brvm_log.txt", "a", encoding="utf-8") as log:
+        log.write(f"[{datetime.now().isoformat()}] SSL Test: {json.dumps(result)}\n")
+    print("📝 Log horodaté ajouté dans brvm_log.txt")
+except Exception as e:
+    print(f"❌ Erreur lors de l’écriture du log : {e}")
+
+# ✅ Résumé visuel
+if result.get("success"):
+    print(f"\n📊 Résumé : {result['status_code']} - SSL OK: {result['ssl_verified']}")
+else:
+    print(f"\n📊 Résumé : Échec - {result.get('error', 'Erreur inconnue')}")
+
     
     print("\n" + "=" * 50)
     
@@ -239,4 +296,7 @@ if __name__ == "__main__":
     test_alternative_endpoints()
     
     print("\n✨ Script terminé")
+<<<<<<< HEAD
       31634db (Initial BRVM API)
+=======
+>>>>>>> d901e9f (Initial BRVM API)

@@ -13,7 +13,7 @@ import brvmRoutes from './routes/brvm.js';
 import historyRoute from './routes/history.js';
 import insertRoute from './routes/insert.js';
 import scrapeRoute from './routes/scrape.js';
-import News from '../models/news.js';
+import News from '../models/news';
 
 dotenv.config();
 

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import News from '../models/news';
 
 const newsSchema = new mongoose.Schema({
   title: { type: String, required: true },

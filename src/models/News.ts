@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import News from '../models/news';
 
 const newsSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -10,4 +9,3 @@ const newsSchema = new mongoose.Schema({
 const News = mongoose.model('News', newsSchema);
 
 export default News;
-

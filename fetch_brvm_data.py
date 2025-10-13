@@ -64,6 +64,7 @@ def get_brvm_data_with_ssl():
 
 import ssl
 import urllib3
+import os
 from datetime import datetime
 from bs4 import BeautifulSoup
 
@@ -111,7 +112,7 @@ def get_brvm_data_with_ssl():
         session = requests.Session()
         
         # Chemin vers le certificat SSL (à ajuster selon votre structure)
-        cert_path = "certs/digicert_global_root_g2.pem"
+        cert_path = os.environ.get("CERT_PATH", "certs/digicert_global_root_g2.pem")
         
         # Configuration SSL
         session.verify = cert_path
@@ -216,13 +217,19 @@ def test_alternative_endpoints():
         print(f"\n🧪 Test de: {endpoint}")
         try:
             response = requests.get(endpoint, timeout=5, verify="certs/digicert_global_root_g2.pem")
+         HEAD
           31634db (Initial BRVM API)
             print(f"✅ {endpoint} - Status: {response.status_code}")
         except Exception as e:
             print(f"❌ {endpoint} - Erreur: {e}")
 
+         print(f"✅ {endpoint} - Status: {response.status_code}")
+    except Exception as e:
+         print(f"❌ {endpoint} - Erreur: {e}")
+         3e34948 (Initial BRVM API)
+
 if __name__ == "__main__":
-<<<<<<< HEAD
+         
           HEAD
     print("📦 Test de récupération des actions BRVM")
     data = get_brvm_stocks()
@@ -256,13 +263,19 @@ if __name__ == "__main__":
     test_alternative_endpoints()
     print("\n✅ Script terminé")
 
-=======
+
         print("📦 Test de récupération des actions BRVM")
     data = get_brvm_stocks()
+       HEAD
     print(json.dumps(data[:5], indent=2, ensure_ascii=False))  # Affiche les 5 premières
->>>>>>> d901e9f (Initial BRVM API)
+       d901e9f (Initial BRVM API)
     print("🚀 BRVM SSL Data Fetcher")
     print("=" * 50)
+
+        print(json.dumps(data[:5], indent=2, ensure_ascii=False))  # Affiche les 5 premières
+        print("🚀 BRVM SSL Data Fetcher")
+        print("=" * 50)
+       3e34948 (Initial BRVM API)
     
     # Test principal
     result = get_brvm_data_with_ssl()
@@ -296,7 +309,7 @@ else:
     test_alternative_endpoints()
     
     print("\n✨ Script terminé")
-<<<<<<< HEAD
+       HEAD
       31634db (Initial BRVM API)
-=======
->>>>>>> d901e9f (Initial BRVM API)
+
+       d901e9f (Initial BRVM API)

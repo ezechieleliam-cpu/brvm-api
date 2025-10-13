@@ -1,0 +1,5 @@
+router.get('/status', async (_: Request, res: Response) => {
+  const state = mongoose.connection.readyState;
+  const status = ['🔴 disconnected', '🟡 connected', '🟠 connecting', '🔵 disconnecting'][state] || 'unknown';
+  res.json({ mongoStatus: status });
+});

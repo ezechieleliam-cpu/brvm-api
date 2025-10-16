@@ -1,14 +1,16 @@
 services:
   - type: web
     name: brvm-api
-    env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "uvicorn api_brvm:app --host 0.0.0.0 --port 10000"
-
-    services:
-  - type: web
-    name: brvm-api
-    env: python
-    buildCommand: ""
-    startCommand: "python server.py"
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: node dist/index.js
+    rootDir: .
     autoDeploy: true
+    envVars:
+      - key: MONGO_URI
+        value: YOUR_MONGO_URI
+      - key: BRVM_URL
+        value: https://www.brvm.org/...
+      - key: RICHBOURSE_URL
+        value: https://www.richbourse.com/...

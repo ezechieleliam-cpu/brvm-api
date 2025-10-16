@@ -1,19 +1,12 @@
-import axios from 'axios';
-import { cache } from "../utils/cache";
-import cheerio from 'cheerio';
-import { config } from 'dotenv';
+import axios from "axios";
+import cheerio from "cheerio";
+import https from "https";
+import { config } from "dotenv";
+import { cache } from "../utils/cache.js";
+
 config();
 
-import https from 'https'; // ajoute en haut du fichier
-
 const agent = new https.Agent({ rejectUnauthorized: false });
-
-const res = await axios.get(process.env.BRVM_URL!, {
-  headers: { 'User-Agent': 'Mozilla/5.0' },
-  timeout: 15000,
-  httpsAgent: agent // ✅ ajoute cette ligne
-});
-
 
 export interface StockData {
   symbole: string;
@@ -27,20 +20,21 @@ export interface StockData {
 export async function scrapeBRVMFromBRVM(): Promise<StockData[]> {
   try {
     const res = await axios.get(process.env.BRVM_URL!, {
-      headers: { 'User-Agent': 'Mozilla/5.0' },
-      timeout: 15000
+      headers: { "User-Agent": "Mozilla/5.0" },
+      timeout: 15000,
+      httpsAgent: agent,
     });
 
     const $ = cheerio.load(res.data);
-    const rows = $('table tbody tr');
+    const rows = $("table tbody tr");
     const data: StockData[] = [];
 
     rows.each((_, row) => {
-      const cells = $(row).find('td');
+      const cells = $(row).find("td");
 
       const symbole = $(cells[0]).text().trim();
-      const coursText = $(cells[1]).text().trim().replace(',', '.');
-      const variationText = $(cells[2]).text().trim().replace(',', '.');
+      const coursText = $(cells[1]).text().trim().replace(",", ".");
+      const variationText = $(cells[2]).text().trim().replace(",", ".");
 
       const cours = parseFloat(coursText);
       const variation = parseFloat(variationText);
@@ -52,7 +46,7 @@ export async function scrapeBRVMFromBRVM(): Promise<StockData[]> {
 
     return data;
   } catch (error) {
-    console.error('❌ BRVM Error:', (error as Error).message);
+    console.error("❌ BRVM Error:", (error as Error).message);
     return [];
   }
 }
@@ -63,20 +57,21 @@ export async function scrapeBRVMFromBRVM(): Promise<StockData[]> {
 export async function scrapeRichBourse(): Promise<StockData[]> {
   try {
     const res = await axios.get(process.env.RICHBOURSE_URL!, {
-      headers: { 'User-Agent': 'Mozilla/5.0' },
-      timeout: 15000
+      headers: { "User-Agent": "Mozilla/5.0" },
+      timeout: 15000,
+      httpsAgent: agent,
     });
 
     const $ = cheerio.load(res.data);
-    const rows = $('table tbody tr');
+    const rows = $("table tbody tr");
     const data: StockData[] = [];
 
     rows.each((_, row) => {
-      const cells = $(row).find('td');
+      const cells = $(row).find("td");
 
       const symbole = $(cells[0]).text().trim();
-      const coursText = $(cells[1]).text().trim().replace(',', '.');
-      const variationText = $(cells[2]).text().trim().replace(',', '.');
+      const coursText = $(cells[1]).text().trim().replace(",", ".");
+      const variationText = $(cells[2]).text().trim().replace(",", ".");
 
       const cours = parseFloat(coursText);
       const variation = parseFloat(variationText);
@@ -88,7 +83,7 @@ export async function scrapeRichBourse(): Promise<StockData[]> {
 
     return data;
   } catch (error) {
-    console.error('❌ RichBourse Error:', (error as Error).message);
+    console.error("❌ RichBourse Error:", (error as Error).message);
     return [];
   }
 }

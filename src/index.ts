@@ -18,6 +18,7 @@ import historyRoute from "./routes/history.js";
 import insertRoute from "./routes/insert.js";
 import { scrape } from "./routes/scrape.js"; // ✅
 import News from "./models/news.js";
+import { monitoring } from "./routes/monitoring.js";
 
 dotenv.config();
 
@@ -55,6 +56,7 @@ app.use("/api/news", news); // ✅
 app.use("/api/stocks", brvmRoutes);
 app.use("/api", sslRoutes);
 app.use("/api", cacheRoutes);
+app.use("/api/monitoring", monitoring);
 
 // 📊 Routes en cache (lecture rapide)
 app.get("/api/brvm", (_, res) => {

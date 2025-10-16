@@ -1,7 +1,11 @@
-import axios from 'axios';
-import { cache } from "./utils/cache";
-import { config } from 'dotenv';
+import axios from "axios";
+import https from "https";
+import { config } from "dotenv";
+import { cache } from "./utils/cache.js";
+
 config();
+
+const agent = new https.Agent({ rejectUnauthorized: false });
 
 export interface StockData {
   symbole: string;
@@ -10,37 +14,39 @@ export interface StockData {
 }
 
 /**
- * 🔍 Scrape les données du site officiel BRVM
+ * 🔍 Scrape les données du site officiel BRVM (mocké)
  */
-export async function scrapeBRVM(): Promise<any[]> {
+export async function scrapeBRVM(): Promise<StockData[]> {
   try {
     const res = await axios.get(process.env.BRVM_URL!, {
-      headers: { 'User-Agent': 'Mozilla/5.0' },
-      timeout: 15000
+      headers: { "User-Agent": "Mozilla/5.0" },
+      timeout: 15000,
+      httpsAgent: agent,
     });
 
-    // TODO: remplacer parseMockBRVM() par une vraie extraction avec cheerio ou puppeteer
+    // TODO: remplacer parseMockBRVM() par cheerio ou puppeteer
     return parseMockBRVM();
   } catch (error) {
-    console.error('❌ BRVM Error:', (error as Error).message);
+    console.error("❌ BRVM Error:", (error as Error).message);
     return [];
   }
 }
 
 /**
- * 🔍 Scrape les données du site RichBourse
+ * 🔍 Scrape les données du site RichBourse (mocké)
  */
-export async function scrapeRichBourse(): Promise<any[]> {
+export async function scrapeRichBourse(): Promise<StockData[]> {
   try {
     const res = await axios.get(process.env.RICHBOURSE_URL!, {
-      headers: { 'User-Agent': 'Mozilla/5.0' },
-      timeout: 15000
+      headers: { "User-Agent": "Mozilla/5.0" },
+      timeout: 15000,
+      httpsAgent: agent,
     });
 
-    // TODO: remplacer parseMockRichBourse() par une vraie extraction avec cheerio ou puppeteer
+    // TODO: remplacer parseMockRichBourse() par cheerio ou puppeteer
     return parseMockRichBourse();
   } catch (error) {
-    console.error('❌ RichBourse Error:', (error as Error).message);
+    console.error("❌ RichBourse Error:", (error as Error).message);
     return [];
   }
 }
@@ -50,16 +56,14 @@ export async function scrapeRichBourse(): Promise<any[]> {
  */
 function parseMockBRVM(): StockData[] {
   return [
-        { symbole: "PALC", variation: 2.8, cours: 9245 },
+    { symbole: "PALC", variation: 2.8, cours: 9245 },
     { symbole: "SOGC", variation: 1.5, cours: 8420 },
   ];
 }
 
-function parseMockRichBourse(): any[] {
+function parseMockRichBourse(): StockData[] {
   return [
     { symbole: "PALC", variation: 2.9, cours: 9250 },
     { symbole: "SOGC", variation: 1.4, cours: 8415 },
   ];
 }
-
-

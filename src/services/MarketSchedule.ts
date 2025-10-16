@@ -1,3 +1,5 @@
+import { cache } from "../utils/cache";
+
 export function isMarketOpen(): boolean {
   const now = new Date();
   const day = now.getDay(); // 0 = dimanche, 6 = samedi

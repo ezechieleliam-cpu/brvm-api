@@ -1,5 +1,6 @@
 import StockModel from '../models/StockModel.js';
 import express, { Request, Response } from 'express';
+import { cache } from "../utils/cache";
 
 const router = express.Router();
 

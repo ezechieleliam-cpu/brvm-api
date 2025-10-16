@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 export interface IStock {
   symbol: string;
@@ -8,13 +8,12 @@ export interface IStock {
   date: Date;
 }
 
-const stockSchema = new mongoose.Schema<IStock>({
-  symbol: { type: String, required: true },
-  name: { type: String, required: true },
-  price: { type: Number, required: true },
-  variation: { type: Number, required: true },
-  date: { type: Date, required: true }
+const stockSchema = new mongoose.Schema({
+  symbole: String,
+  variation: Number,
+  cours: Number,
+  timestamp: Date,
 });
 
-const Stock = mongoose.model<IStock>('Stock', stockSchema);
-export default Stock; // ✅ export par défaut
+const StockModel = mongoose.model("Stock", stockSchema);
+export default StockModel;

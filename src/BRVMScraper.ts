@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { cache } from "./utils/cache";
 import { config } from 'dotenv';
 config();
 
@@ -11,7 +12,7 @@ export interface StockData {
 /**
  * 🔍 Scrape les données du site officiel BRVM
  */
-export async function scrapeBRVMFromBRVM(): Promise<StockData[]> {
+export async function scrapeBRVM(): Promise<any[]> {
   try {
     const res = await axios.get(process.env.BRVM_URL!, {
       headers: { 'User-Agent': 'Mozilla/5.0' },
@@ -29,7 +30,7 @@ export async function scrapeBRVMFromBRVM(): Promise<StockData[]> {
 /**
  * 🔍 Scrape les données du site RichBourse
  */
-export async function scrapeRichBourse(): Promise<StockData[]> {
+export async function scrapeRichBourse(): Promise<any[]> {
   try {
     const res = await axios.get(process.env.RICHBOURSE_URL!, {
       headers: { 'User-Agent': 'Mozilla/5.0' },
@@ -49,17 +50,16 @@ export async function scrapeRichBourse(): Promise<StockData[]> {
  */
 function parseMockBRVM(): StockData[] {
   return [
-    { symbole: 'PALC', variation: 2.8, cours: 9245 },
-    { symbole: 'SOGC', variation: 1.5, cours: 8420 }
+        { symbole: "PALC", variation: 2.8, cours: 9245 },
+    { symbole: "SOGC", variation: 1.5, cours: 8420 },
   ];
 }
 
-/**
- * 🧪 Données fictives RichBourse pour test
- */
-function parseMockRichBourse(): StockData[] {
+function parseMockRichBourse(): any[] {
   return [
-    { symbole: 'PALC', variation: 2.9, cours: 9250 },
-    { symbole: 'SOGC', variation: 1.4, cours: 8415 }
+    { symbole: "PALC", variation: 2.9, cours: 9250 },
+    { symbole: "SOGC", variation: 1.4, cours: 8415 },
   ];
 }
+
+

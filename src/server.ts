@@ -1,5 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import { cache } from "./utils/cache";
+import { sslRoutes } from "./routes/ssl";
 
 const app = express();
 const PORT = process.env.PORT || 10000;

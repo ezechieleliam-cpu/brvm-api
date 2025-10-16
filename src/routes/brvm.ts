@@ -1,5 +1,5 @@
 import express from 'express';
-import { cache } from '../utils/cache.js'; // ✅ extension .js requise
+import { cache } from "../utils/cache";
 
 const router = express.Router();
 

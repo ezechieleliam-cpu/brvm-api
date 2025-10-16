@@ -5,6 +5,9 @@ from fetch_brvm_data import get_brvm_stocks, get_brvm_data_with_ssl
 from datetime import datetime
 import json
 import os
+import sslRoutes from "./routes/ssl";
+
+app.use("/api", sslRoutes);
 
 # ✅ Fonction de log
 def log_request(route):

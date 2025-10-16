@@ -1,3 +1,5 @@
+import { cache } from "../utils/cache";
+
 export interface INews {
   title: string;
   source: string;

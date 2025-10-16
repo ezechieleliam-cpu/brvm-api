@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import { sslRoutes } from "./routes/ssl";
+import { cache } from "./utils/cache";
 import * as dotenv from 'dotenv';
 dotenv.config();
 

@@ -4,7 +4,7 @@ config();
 /**
  * 🔍 Scrape les données du site officiel BRVM
  */
-export async function scrapeBRVMFromBRVM() {
+export async function scrapeBRVM() {
     try {
         const res = await axios.get(process.env.BRVM_URL, {
             headers: { 'User-Agent': 'Mozilla/5.0' },
@@ -40,16 +40,13 @@ export async function scrapeRichBourse() {
  */
 function parseMockBRVM() {
     return [
-        { symbole: 'PALC', variation: 2.8, cours: 9245 },
-        { symbole: 'SOGC', variation: 1.5, cours: 8420 }
+        { symbole: "PALC", variation: 2.8, cours: 9245 },
+        { symbole: "SOGC", variation: 1.5, cours: 8420 },
     ];
 }
-/**
- * 🧪 Données fictives RichBourse pour test
- */
 function parseMockRichBourse() {
     return [
-        { symbole: 'PALC', variation: 2.9, cours: 9250 },
-        { symbole: 'SOGC', variation: 1.4, cours: 8415 }
+        { symbole: "PALC", variation: 2.9, cours: 9250 },
+        { symbole: "SOGC", variation: 1.4, cours: 8415 },
     ];
 }

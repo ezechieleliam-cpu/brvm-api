@@ -1,37 +1,16 @@
-import News from '../models/news';
-import express, { Request, Response } from 'express';
-import mongoose from 'mongoose';
+import express from "express";
+import NewsModel from "../models/NewsModel.js"; // ✅
+import { cache } from "../utils/cache.js";
 
-const router = express.Router();
+export const news = express.Router();
+export const stock = express.Router();
 
-mongoose.connection.once('open', async () => {
+
+news.get("/", async (_, res) => {
   try {
-    await News.insertMany([
-      {
-        title: "BRVM Weekly Update",
-        content: "The market closed higher this week with gains in banking and telecom sectors.",
-        date: new Date(),
-      },
-      {
-        title: "New Listing: ECOBANK Bonds",
-        content: "ECOBANK has listed new bonds on the BRVM with a 6.5% yield.",
-        date: new Date(),
-      }
-    ]);
-    console.log('✅ News insérées après connexion MongoDB');
-  } catch (err) {
-    console.error('❌ Erreur insertMany:', err);
-  }
-});
-
-router.get('/', async (_: Request, res: Response) => {
-  try {
-    const news = await News.find().sort({ date: -1 }).limit(10);
-    res.json(news);
+    const newsItems = await NewsModel.find().sort({ publishedAt: -1 }).limit(20);
+    res.json(newsItems);
   } catch (error) {
-    console.error('❌ Erreur /api/news :', error);
-    res.status(500).json({ error: 'Erreur serveur' });
+    res.status(500).json({ error: "Erreur lors de la récupération des actualités." });
   }
 });
-
-export default router;

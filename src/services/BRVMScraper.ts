@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { cache } from "../utils/cache";
 import cheerio from 'cheerio';
 import { config } from 'dotenv';
 config();

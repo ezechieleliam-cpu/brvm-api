@@ -1,5 +1,6 @@
 import puppeteer from 'puppeteer';
 import { scrapeBRVMFromBRVM, scrapeRichBourse } from './BRVMScraper';
+import { cache } from "../utils/cache";
 
 export async function scrapeBRVM() {
   const dataA = await scrapeBRVMFromBRVM();
